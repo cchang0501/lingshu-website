@@ -1,0 +1,112 @@
+<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- 渐变色定义 -->
+    <linearGradient id="mainGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="accentGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f093fb;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#f5576c;stop-opacity:0.8" />
+    </linearGradient>
+
+    <!-- 发光效果 -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- 轻微阴影 -->
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+
+  <!-- 背景圆 -->
+  <circle cx="200" cy="200" r="180" fill="none" stroke="url(#mainGradient)" stroke-width="1" opacity="0.1"/>
+  <circle cx="200" cy="200" r="150" fill="none" stroke="url(#mainGradient)" stroke-width="1" opacity="0.15"/>
+
+  <!-- 核心图形：枢纽节点 -->
+  <!-- 中心节点 -->
+  <circle cx="200" cy="200" r="20" fill="url(#mainGradient)" filter="url(#glow)"/>
+  
+  <!-- 周围的知识节点（散落的收藏） -->
+  <g opacity="0.85">
+    <!-- 上方节点 -->
+    <circle cx="200" cy="120" r="12" fill="url(#accentGradient)"/>
+    <line x1="200" y1="180" x2="200" y2="132" stroke="url(#mainGradient)" stroke-width="2" opacity="0.6" stroke-dasharray="4,4">
+      <animate attributeName="stroke-dashoffset" from="8" to="0" dur="1.5s" repeatCount="indefinite"/>
+    </line>
+    
+    <!-- 右上节点 -->
+    <circle cx="270" cy="145" r="10" fill="url(#accentGradient)"/>
+    <line x1="215" y1="190" x2="260" y2="152" stroke="url(#mainGradient)" stroke-width="2" opacity="0.6" stroke-dasharray="4,4">
+      <animate attributeName="stroke-dashoffset" from="8" to="0" dur="2s" repeatCount="indefinite"/>
+    </line>
+    
+    <!-- 右节点 -->
+    <circle cx="290" cy="200" r="14" fill="url(#accentGradient)"/>
+    <line x1="220" y1="200" x2="276" y2="200" stroke="url(#mainGradient)" stroke-width="2" opacity="0.6" stroke-dasharray="4,4">
+      <animate attributeName="stroke-dashoffset" from="8" to="0" dur="1.8s" repeatCount="indefinite"/>
+    </line>
+    
+    <!-- 右下节点 -->
+    <circle cx="270" cy="255" r="11" fill="url(#accentGradient)"/>
+    <line x1="215" y1="210" x2="262" y2="248" stroke="url(#mainGradient)" stroke-width="2" opacity="0.6" stroke-dasharray="4,4">
+      <animate attributeName="stroke-dashoffset" from="8" to="0" dur="2.2s" repeatCount="indefinite"/>
+    </line>
+    
+    <!-- 下方节点 -->
+    <circle cx="200" cy="280" r="13" fill="url(#accentGradient)"/>
+    <line x1="200" y1="220" x2="200" y2="267" stroke="url(#mainGradient)" stroke-width="2" opacity="0.6" stroke-dasharray="4,4">
+      <animate attributeName="stroke-dashoffset" from="8" to="0" dur="1.6s" repeatCount="indefinite"/>
+    </line>
+    
+    <!-- 左下节点 -->
+    <circle cx="130" cy="255" r="10" fill="url(#accentGradient)"/>
+    <line x1="185" y1="210" x2="138" y2="248" stroke="url(#mainGradient)" stroke-width="2" opacity="0.6" stroke-dasharray="4,4">
+      <animate attributeName="stroke-dashoffset" from="8" to="0" dur="1.9s" repeatCount="indefinite"/>
+    </line>
+    
+    <!-- 左节点 -->
+    <circle cx="110" cy="200" r="12" fill="url(#accentGradient)"/>
+    <line x1="180" y1="200" x2="122" y2="200" stroke="url(#mainGradient)" stroke-width="2" opacity="0.6" stroke-dasharray="4,4">
+      <animate attributeName="stroke-dashoffset" from="8" to="0" dur="2.1s" repeatCount="indefinite"/>
+    </line>
+    
+    <!-- 左上节点 -->
+    <circle cx="130" cy="145" r="11" fill="url(#accentGradient)"/>
+    <line x1="185" y1="190" x2="138" y2="152" stroke="url(#mainGradient)" stroke-width="2" opacity="0.6" stroke-dasharray="4,4">
+      <animate attributeName="stroke-dashoffset" from="8" to="0" dur="1.7s" repeatCount="indefinite"/>
+    </line>
+  </g>
+
+  <!-- 节点间的次级连接（显示隐藏联系） -->
+  <g opacity="0.25" stroke="url(#accentGradient)" stroke-width="1.5">
+    <path d="M 200 120 Q 235 132 270 145" fill="none" stroke-dasharray="3,3"/>
+    <path d="M 270 145 Q 280 172 290 200" fill="none" stroke-dasharray="3,3"/>
+    <path d="M 270 255 Q 235 267 200 280" fill="none" stroke-dasharray="3,3"/>
+    <path d="M 130 255 Q 120 227 110 200" fill="none" stroke-dasharray="3,3"/>
+    <path d="M 130 145 Q 165 132 200 120" fill="none" stroke-dasharray="3,3"/>
+  </g>
+
+  <!-- 中心的灵感火花 -->
+  <g opacity="0.7">
+    <circle cx="200" cy="200" r="8" fill="white">
+      <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- 品牌名称 -->
+  <text x="200" y="340" font-family="'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="42" font-weight="600" fill="url(#mainGradient)" text-anchor="middle" filter="url(#shadow)">
+    灵枢
+  </text>
+  
+  <text x="200" y="365" font-family="'SF Pro', 'Helvetica Neue', sans-serif" font-size="16" font-weight="400" fill="#8b95a5" text-anchor="middle" letter-spacing="2">
+    LÍNG SHŪ
+  </text>
+</svg>
