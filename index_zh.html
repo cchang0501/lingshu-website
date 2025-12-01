@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="NL5rEx6-EcVIpm9XQenZicdLzdlFTEjn_n0Q2r-WLdk" />
     
-    <title>灵枢 - AI驱动的知识连接平台</title>
-    <meta name="description" content="灵枢用AI帮你发现文章间的跨领域连接，体验知识碰撞的魔法时刻">
+    <title>灵汇 (InspLink) - AI驱动的知识连接平台</title>
+    <meta name="description" content="灵汇 (InspLink)用AI帮你发现文章间的跨领域连接，体验知识碰撞的魔法时刻">
     
     <!-- Preconnect to external domains for faster loading -->
     <link rel="preconnect" href="https://cdn.tailwindcss.com">
@@ -853,8 +853,8 @@
     <nav class="navbar">
         <div class="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
             <div class="flex items-center gap-2">
-                <img src="./lingshu-logo.svg" alt="灵枢" class="h-12 w-12">
-                <h1 class="text-lg font-bold" style="color: white;">灵枢</h1>
+                <img src="./lingshu-logo.svg" alt="灵汇 (InspLink)" class="h-12 w-12">
+                <h1 class="text-lg font-bold" style="color: white;">灵汇 (InspLink)</h1>
             </div>
             <div class="flex items-center gap-4">
                 <a href="https://chromewebstore.google.com/detail/ljolccnkjeknegdndamehdpljmklngfn" 
@@ -1132,7 +1132,7 @@
             <div class="border-t pt-6" style="border-color: var(--border-primary);">
                 <div class="text-center mb-4">
                     <p class="text-lg font-semibold mb-2" style="color: var(--text-primary);">
-                        🎉 体验灵枢的魔法时刻
+                        🎉 体验灵汇 (InspLink)的魔法时刻
                     </p>
                     <p class="text-sm" style="color: var(--text-secondary);">
                         让知识自动连接，开启跨领域思考之旅
@@ -1798,7 +1798,7 @@
             content.innerHTML = `
                 <div class="text-center">
                     <div class="text-5xl mb-4">🎉</div>
-                    <h3 class="text-2xl font-bold mb-2" style="color: var(--text-primary);">欢迎加入灵枢！</h3>
+                    <h3 class="text-2xl font-bold mb-2" style="color: var(--text-primary);">欢迎加入灵汇 (InspLink)！</h3>
                     <p class="mb-8" style="color: var(--text-secondary);">选择你的平台，开始知识连接之旅</p>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -1943,9 +1943,9 @@
                 guide.innerHTML = `
                     <div style="max-width: 500px; padding: 32px; background: var(--surface-850); border: 1px solid var(--border-primary); border-radius: 20px; text-align: center;">
                         <div style="font-size: 48px; margin-bottom: 16px;">👋</div>
-                        <h3 style="font-size: 24px; font-weight: bold; margin-bottom: 12px; color: var(--text-primary);">欢迎来到灵枢</h3>
+                        <h3 style="font-size: 24px; font-weight: bold; margin-bottom: 12px; color: var(--text-primary);">欢迎来到灵汇 (InspLink)</h3>
                         <p style="color: var(--text-secondary); margin-bottom: 24px; line-height: 1.6;">
-                            灵枢用 AI 帮你发现知识间的隐藏连接。<br>
+                            灵汇 (InspLink)用 AI 帮你发现知识间的隐藏连接。<br>
                             点击下方<span style="color: #FFD700; font-weight: 600;">发光的连接</span>，体验魔法时刻！
                         </p>
                         <button onclick="closeWelcomeGuide()" class="btn btn-primary">
@@ -2174,7 +2174,7 @@
             const blob = new Blob([JSON.stringify({articles, connections}, null, 2)], {type: 'application/json'});
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
-            a.download = `灵枢_${new Date().toISOString().split('T')[0]}.json`;
+            a.download = `灵汇 (InspLink)_${new Date().toISOString().split('T')[0]}.json`;
             a.click();
             URL.revokeObjectURL(a.href);
             showToast('✅ JSON导出成功！', 'success');
@@ -2191,7 +2191,7 @@
             const zip = new JSZip();
             
             // 创建README
-            let readme = '# 灵枢知识库导出\n\n';
+            let readme = '# 灵汇 (InspLink)知识库导出\n\n';
             readme += `导出时间：${new Date().toLocaleString('zh-CN')}\n`;
             readme += `文章数量：${articles.length}\n\n`;
             readme += '## 文章列表\n\n';
@@ -2219,7 +2219,7 @@
             zip.generateAsync({type: 'blob'}).then(blob => {
                 const a = document.createElement('a');
                 a.href = URL.createObjectURL(blob);
-                a.download = `灵枢知识库_${new Date().toISOString().split('T')[0]}.zip`;
+                a.download = `灵汇 (InspLink)知识库_${new Date().toISOString().split('T')[0]}.zip`;
                 a.click();
                 URL.revokeObjectURL(a.href);
                 showToast('✅ Markdown ZIP导出成功！', 'success');
@@ -2246,7 +2246,7 @@
             const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
-            a.download = `灵枢知识库_${new Date().toISOString().split('T')[0]}.csv`;
+            a.download = `灵汇 (InspLink)知识库_${new Date().toISOString().split('T')[0]}.csv`;
             a.click();
             URL.revokeObjectURL(a.href);
             showToast('✅ CSV导出成功！', 'success');
@@ -2262,7 +2262,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>灵枢知识库 - ${new Date().toLocaleDateString('zh-CN')}</title>
+    <title>灵汇 (InspLink)知识库 - ${new Date().toLocaleDateString('zh-CN')}</title>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; max-width: 900px; margin: 40px auto; padding: 20px; background: #f5f5f5; }
         .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px; border-radius: 12px; margin-bottom: 30px; }
@@ -2277,7 +2277,7 @@
 </head>
 <body>
     <div class="header">
-        <h1>📚 灵枢知识库</h1>
+        <h1>📚 灵汇 (InspLink)知识库</h1>
         <p>导出时间：${new Date().toLocaleString('zh-CN')} | 文章数量：${articles.length}</p>
     </div>
     
@@ -2295,7 +2295,7 @@
     `).join('')}
     
     <div style="text-align: center; color: #999; margin-top: 40px;">
-        <p>由灵枢 AI 知识连接平台生成</p>
+        <p>由灵汇 (InspLink) AI 知识连接平台生成</p>
     </div>
 </body>
 </html>`;
@@ -2303,7 +2303,7 @@
             const blob = new Blob([html], {type: 'text/html;charset=utf-8;'});
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
-            a.download = `灵枢知识库_${new Date().toISOString().split('T')[0]}.html`;
+            a.download = `灵汇 (InspLink)知识库_${new Date().toISOString().split('T')[0]}.html`;
             a.click();
             URL.revokeObjectURL(a.href);
             showToast('✅ HTML导出成功！', 'success');
