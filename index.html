@@ -1,36 +1,38 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="NL5rEx6-EcVIpm9XQenZicdLzdlFTEjn_n0Q2r-WLdk" />
-    
+
     <title>灵汇 (InspLink) - AI驱动的知识连接平台</title>
     <meta name="description" content="灵汇 (InspLink)用AI帮你发现文章间的跨领域连接，体验知识碰撞的魔法时刻">
-    
+
     <!-- Preconnect to external domains for faster loading -->
     <link rel="preconnect" href="https://cdn.tailwindcss.com">
     <link rel="preconnect" href="https://d3js.org">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://lingshu-api.cchang0727.workers.dev">
-    
+
     <!-- Preload critical resources -->
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" as="style">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        as="style">
     <link rel="preload" href="./lingshu-logo.svg" as="image">
-    
+
     <!-- Inter Font with display=swap for better performance -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- D3.js - defer loading -->
     <script src="https://d3js.org/d3.v7.min.js" defer></script>
-    
+
     <!-- JSZip for export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
-    
+
     <style>
         /* Premium Design System v2.0 */
         :root {
@@ -51,13 +53,13 @@
             --ease-expo: cubic-bezier(0.19, 1, 0.22, 1);
             --duration-normal: 300ms;
         }
-        
+
         * {
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             text-rendering: optimizeLegibility;
         }
-        
+
         body {
             font-family: var(--font-display);
             background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
@@ -68,9 +70,10 @@
             overflow-x: hidden;
             position: relative;
         }
-        
+
         /* Gradient Mesh Background - 强烈光晕 */
-        body::before, body::after {
+        body::before,
+        body::after {
             content: '';
             position: fixed;
             border-radius: 50%;
@@ -80,7 +83,7 @@
             z-index: 0;
             mix-blend-mode: screen;
         }
-        
+
         body::before {
             width: 800px;
             height: 800px;
@@ -89,7 +92,7 @@
             left: -200px;
             animation: float 20s ease-in-out infinite;
         }
-        
+
         body::after {
             width: 700px;
             height: 700px;
@@ -98,7 +101,7 @@
             right: -150px;
             animation: float 25s ease-in-out infinite reverse;
         }
-        
+
         /* 第三个光晕 - 增加层次 */
         body::after {
             content: '';
@@ -116,14 +119,27 @@
             z-index: 0;
             animation: float 30s ease-in-out infinite;
         }
-        
+
         @keyframes float {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            25% { transform: translate(50px, -50px) scale(1.1); }
-            50% { transform: translate(-30px, 30px) scale(0.9); }
-            75% { transform: translate(-50px, -30px) scale(1.05); }
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            25% {
+                transform: translate(50px, -50px) scale(1.1);
+            }
+
+            50% {
+                transform: translate(-30px, 30px) scale(0.9);
+            }
+
+            75% {
+                transform: translate(-50px, -30px) scale(1.05);
+            }
         }
-        
+
         /* Glass Navbar */
         .navbar {
             position: fixed;
@@ -137,7 +153,7 @@
             border-bottom: 1px solid rgba(139, 92, 246, 0.15);
             z-index: 1000;
         }
-        
+
         /* Network Graph */
         #network-graph {
             width: 100%;
@@ -145,7 +161,7 @@
             position: relative;
             min-height: 500px;
         }
-        
+
         /* Skeleton Loading */
         .skeleton-graph {
             width: 100%;
@@ -156,115 +172,126 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .skeleton-node {
             position: absolute;
             width: 56px;
             height: 56px;
             border-radius: 50%;
-            background: linear-gradient(90deg, 
-                rgba(255, 255, 255, 0.05) 0%, 
-                rgba(255, 255, 255, 0.1) 50%, 
-                rgba(255, 255, 255, 0.05) 100%);
+            background: linear-gradient(90deg,
+                    rgba(255, 255, 255, 0.05) 0%,
+                    rgba(255, 255, 255, 0.1) 50%,
+                    rgba(255, 255, 255, 0.05) 100%);
             background-size: 200% 100%;
             animation: shimmer 2s infinite;
         }
-        
+
         .skeleton-link {
             position: absolute;
             height: 2px;
-            background: linear-gradient(90deg, 
-                rgba(255, 255, 255, 0.03) 0%, 
-                rgba(255, 255, 255, 0.08) 50%, 
-                rgba(255, 255, 255, 0.03) 100%);
+            background: linear-gradient(90deg,
+                    rgba(255, 255, 255, 0.03) 0%,
+                    rgba(255, 255, 255, 0.08) 50%,
+                    rgba(255, 255, 255, 0.03) 100%);
             background-size: 200% 100%;
             animation: shimmer 2s infinite;
             transform-origin: left center;
         }
-        
+
         @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
+            0% {
+                background-position: -200% 0;
+            }
+
+            100% {
+                background-position: 200% 0;
+            }
         }
-        
+
         .skeleton-text {
             height: 12px;
-            background: linear-gradient(90deg, 
-                rgba(255, 255, 255, 0.05) 0%, 
-                rgba(255, 255, 255, 0.1) 50%, 
-                rgba(255, 255, 255, 0.05) 100%);
+            background: linear-gradient(90deg,
+                    rgba(255, 255, 255, 0.05) 0%,
+                    rgba(255, 255, 255, 0.1) 50%,
+                    rgba(255, 255, 255, 0.05) 100%);
             background-size: 200% 100%;
             animation: shimmer 2s infinite;
             border-radius: 6px;
         }
-        
+
         /* Bounce Animation */
         @keyframes bounce-slow {
-            0%, 100% {
+
+            0%,
+            100% {
                 transform: translateY(0);
             }
+
             50% {
                 transform: translateY(-8px);
             }
         }
-        
+
         .animate-bounce-slow {
             animation: bounce-slow 2s ease-in-out infinite;
         }
-        
+
         .node {
             cursor: pointer;
             transition: opacity var(--duration-normal) var(--ease-expo);
         }
-        
+
         .node circle {
             transition: transform var(--duration-normal) var(--ease-expo);
             filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
         }
-        
+
         .node:hover circle {
             transform: scale(1.15);
         }
-        
+
         .node.dimmed {
             opacity: 0.2;
         }
-        
+
         .link {
             stroke: rgba(255, 255, 255, 0.08);
             stroke-width: 1.5px;
             transition: all var(--duration-normal) var(--ease-expo);
         }
-        
+
         .link.highlighted {
             stroke: var(--accent-400);
             stroke-width: 2.5px;
             opacity: 1;
         }
-        
+
         .link.dimmed {
             opacity: 0.1;
         }
-        
+
         .link.pulsing {
             stroke: #FFD700;
             animation: pulse 2s ease-in-out infinite;
             stroke-width: 3px;
         }
-        
+
         @keyframes pulse {
-            0%, 100% {
+
+            0%,
+            100% {
                 opacity: 0.7;
                 stroke-width: 3px;
                 filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6));
             }
+
             50% {
                 opacity: 1;
                 stroke-width: 4px;
                 filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.9));
             }
         }
-        
+
         /* 首次引导箭头 */
         .guide-arrow {
             position: absolute;
@@ -272,13 +299,13 @@
             z-index: 100;
             animation: bounce-arrow 2s ease-in-out infinite;
         }
-        
+
         .guide-arrow svg {
             width: 60px;
             height: 60px;
             filter: drop-shadow(0 2px 8px rgba(255, 215, 0, 0.4));
         }
-        
+
         .guide-text {
             position: absolute;
             background: linear-gradient(135deg, rgba(255, 215, 0, 0.95), rgba(255, 165, 0, 0.95));
@@ -291,62 +318,89 @@
             box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
             animation: pulse-text 2s ease-in-out infinite;
         }
-        
+
         @keyframes bounce-arrow {
-            0%, 100% {
+
+            0%,
+            100% {
                 transform: translateY(0) scale(1);
             }
+
             50% {
                 transform: translateY(-10px) scale(1.1);
             }
         }
-        
+
         @keyframes pulse-text {
-            0%, 100% {
+
+            0%,
+            100% {
                 transform: scale(1);
                 box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
             }
+
             50% {
                 transform: scale(1.05);
                 box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5);
             }
         }
-        
+
         /* 特性标签动画和交互 */
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
-            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
         }
-        
+
         @keyframes fadeOut {
-            from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-            to { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+            from {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            to {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.9);
+            }
         }
-        
+
         .feature-tag:hover {
             background: rgba(255, 255, 255, 0.1) !important;
             border-color: rgba(255, 255, 255, 0.2) !important;
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
         }
-        
+
         .feature-tag:hover .feature-emoji {
             transform: scale(1.2) rotate(10deg);
         }
-        
+
         .feature-tag:hover span:not(.feature-emoji) {
             color: rgba(255, 255, 255, 0.95) !important;
         }
-        
+
         .feature-tag:active {
             transform: translateY(0) scale(0.98);
         }
-        
+
         /* Modal */
         .modal {
             display: none;
@@ -358,11 +412,11 @@
             align-items: center;
             justify-content: center;
         }
-        
+
         .modal.active {
             display: flex;
         }
-        
+
         .modal-content {
             background: var(--surface-850);
             border: 1px solid var(--border-primary);
@@ -373,18 +427,19 @@
             overflow-y: auto;
             animation: slideUp 400ms var(--ease-expo);
         }
-        
+
         @keyframes slideUp {
             from {
                 opacity: 0;
                 transform: translateY(30px) scale(0.95);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0) scale(1);
             }
         }
-        
+
         /* Button Styles */
         .btn {
             display: inline-flex;
@@ -398,23 +453,23 @@
             cursor: pointer;
             border: none;
         }
-        
+
         .btn-primary {
             background: var(--primary-500);
             color: white;
         }
-        
+
         .btn-primary:hover {
             background: var(--primary-400);
             transform: translateY(-2px);
             box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
         }
-        
+
         .btn-primary:active {
             transform: translateY(0);
             box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
         }
-        
+
         /* Input Styles */
         .input-field {
             background: var(--surface-800);
@@ -422,81 +477,92 @@
             color: var(--text-primary);
             transition: all var(--duration-normal) var(--ease-expo);
         }
-        
+
         .input-field:focus {
             outline: none;
             border-color: var(--primary-500);
             background: rgba(27, 30, 39, 0.95);
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1), 
-                        0 0 0 1px var(--primary-500),
-                        inset 0 0 20px rgba(59, 130, 246, 0.05);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1),
+                0 0 0 1px var(--primary-500),
+                inset 0 0 20px rgba(59, 130, 246, 0.05);
         }
-        
+
         .input-field::placeholder {
             color: var(--text-tertiary);
         }
-        
+
         /* Enhanced Node Styles */
         .node circle {
             transition: all 400ms cubic-bezier(0.4, 0, 0.2, 1);
             filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.4));
             animation: nodeBreath 3s ease-in-out infinite;
         }
-        
+
         .node:hover circle {
             transform: scale(1.2);
             filter: drop-shadow(0 8px 32px rgba(59, 130, 246, 0.6));
             animation: nodeBreath 1s ease-in-out infinite;
         }
-        
+
         /* 节点呼吸动画 */
         @keyframes nodeBreath {
-            0%, 100% {
+
+            0%,
+            100% {
                 transform: scale(1);
                 opacity: 1;
             }
+
             50% {
                 transform: scale(1.08);
                 opacity: 0.9;
             }
         }
-        
+
         /* 节点悬浮动画 */
         @keyframes nodeFloat {
-            0%, 100% {
+
+            0%,
+            100% {
                 transform: translate(0, 0);
             }
+
             25% {
                 transform: translate(0, -8px);
             }
+
             50% {
                 transform: translate(0, 0);
             }
+
             75% {
                 transform: translate(0, 4px);
             }
         }
-        
+
         /* 发光脉冲动画 */
         @keyframes pulseGlow {
-            0%, 100% {
+
+            0%,
+            100% {
                 filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.4));
             }
+
             50% {
                 filter: drop-shadow(0 0 16px rgba(59, 130, 246, 0.8));
             }
         }
-        
+
         /* Enhanced Link Styles */
         .link {
             transition: all 600ms cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
+
         .link.highlighted {
             filter: drop-shadow(0 0 12px rgba(167, 139, 250, 0.8));
             stroke-width: 3px;
         }
-        
+
         /* Loading State */
         .loading-spinner {
             display: inline-block;
@@ -507,46 +573,49 @@
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
-        
+
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
-        
+
         /* Scroll Animation */
         .fade-in-up {
             opacity: 0;
             transform: translateY(30px);
             transition: opacity 0.8s ease-out, transform 0.8s ease-out;
         }
-        
+
         .fade-in-up.visible {
             opacity: 1;
             transform: translateY(0);
         }
-        
+
         /* Glow Effect */
         .glow-on-hover {
             transition: box-shadow 0.3s ease;
         }
-        
+
         .glow-on-hover:hover {
             box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
         }
-        
+
         /* Performance optimizations */
         * {
             will-change: auto;
         }
-        
+
         .node circle,
         .link,
         .btn,
         .modal {
             will-change: transform, opacity;
         }
-        
+
         /* Reduce motion for users who prefer it */
         @media (prefers-reduced-motion: reduce) {
+
             *,
             *::before,
             *::after {
@@ -555,88 +624,91 @@
                 transition-duration: 0.01ms !important;
             }
         }
-        
+
         /* Touch optimization */
         @media (hover: none) and (pointer: coarse) {
-            .btn, .node, .link {
+
+            .btn,
+            .node,
+            .link {
                 cursor: pointer;
                 -webkit-tap-highlight-color: transparent;
             }
-            
+
             .btn {
                 min-height: 44px;
                 min-width: 44px;
             }
-            
+
             .node circle {
                 r: 32;
             }
-            
+
             .link {
                 stroke-width: 3px;
             }
         }
-        
+
         /* Responsive */
         @media (max-width: 768px) {
             .navbar {
                 padding: 0 12px;
             }
-            
+
             .navbar h1 {
                 font-size: 16px;
             }
-            
+
             .navbar a {
                 padding: 8px 12px;
                 font-size: 13px;
             }
-            
+
             #network-graph {
                 height: 400px;
                 min-height: 400px;
             }
-            
+
             .modal-content {
                 padding: 24px;
                 width: 95%;
                 max-height: 85vh;
             }
-            
+
             h2 {
                 font-size: 2.5rem;
             }
-            
+
             .feature-tag {
                 font-size: 11px;
                 padding: 6px 12px;
             }
-            
+
             /* 移动端网络图优化 */
             .node text {
                 font-size: 11px;
             }
-            
+
             .guide-arrow {
                 transform: scale(0.8);
             }
         }
-        
+
         @media (max-width: 480px) {
             h2 {
                 font-size: 2rem;
             }
-            
+
             .modal-content {
                 padding: 20px;
             }
-            
+
             .btn {
                 padding: 10px 20px;
                 font-size: 13px;
             }
         }
-        
+
         /* Article Cards */
         .article-card {
             background: rgba(255, 255, 255, 0.05);
@@ -647,14 +719,14 @@
             transition: all 0.3s var(--ease-expo);
             cursor: pointer;
         }
-        
+
         .article-card:hover {
             transform: translateY(-4px);
             box-shadow: 0 12px 40px rgba(59, 130, 246, 0.2);
             border-color: rgba(59, 130, 246, 0.3);
             background: rgba(255, 255, 255, 0.08);
         }
-        
+
         /* Locked Feature Card */
         .locked-card {
             position: relative;
@@ -666,7 +738,7 @@
             text-align: center;
             transition: all 0.3s var(--ease-expo);
         }
-        
+
         .locked-card::before {
             content: '';
             position: absolute;
@@ -675,18 +747,18 @@
             border-radius: 16px;
             backdrop-filter: blur(2px);
         }
-        
+
         .locked-card:hover {
             border-color: rgba(255, 215, 0, 0.4);
             transform: translateY(-2px);
         }
-        
+
         .lock-icon {
             font-size: 48px;
             margin-bottom: 16px;
             filter: drop-shadow(0 2px 8px rgba(255, 215, 0, 0.3));
         }
-        
+
         /* Connection Card */
         .connection-card {
             background: rgba(255, 255, 255, 0.05);
@@ -696,39 +768,39 @@
             padding: 20px;
             transition: all 0.3s var(--ease-expo);
         }
-        
+
         .connection-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 24px rgba(236, 72, 153, 0.2);
             border-color: rgba(236, 72, 153, 0.5);
         }
-        
+
         .confidence-bar {
             height: 8px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 4px;
             overflow: hidden;
         }
-        
+
         .confidence-fill {
             height: 100%;
             background: linear-gradient(to right, #10b981, #22c55e);
             border-radius: 4px;
             transition: width 0.5s ease;
         }
-        
+
         .confidence-fill.high {
             background: linear-gradient(to right, #10b981, #22c55e);
         }
-        
+
         .confidence-fill.medium {
             background: linear-gradient(to right, #f59e0b, #fbbf24);
         }
-        
+
         .confidence-fill.low {
             background: linear-gradient(to right, #6b7280, #9ca3af);
         }
-        
+
         /* CTA Banner */
         .cta-banner {
             position: fixed;
@@ -742,11 +814,11 @@
             transform: translateY(100%);
             transition: transform 0.4s var(--ease-expo);
         }
-        
+
         .cta-banner.active {
             transform: translateY(0);
         }
-        
+
         /* Toast Notification System */
         #toastContainer {
             position: fixed;
@@ -758,7 +830,7 @@
             gap: 12px;
             pointer-events: none;
         }
-        
+
         .toast {
             min-width: 300px;
             max-width: 400px;
@@ -773,33 +845,33 @@
             animation: slideInRight 0.3s var(--ease-expo);
             transition: all 0.3s var(--ease-expo);
         }
-        
+
         .toast.hiding {
             animation: slideOutRight 0.3s var(--ease-expo);
             opacity: 0;
             transform: translateX(100%);
         }
-        
+
         .toast-success {
             background: linear-gradient(135deg, rgba(16, 185, 129, 0.95), rgba(5, 150, 105, 0.95));
             border: 1px solid rgba(16, 185, 129, 0.3);
         }
-        
+
         .toast-error {
             background: linear-gradient(135deg, rgba(239, 68, 68, 0.95), rgba(220, 38, 38, 0.95));
             border: 1px solid rgba(239, 68, 68, 0.3);
         }
-        
+
         .toast-info {
             background: linear-gradient(135deg, rgba(59, 130, 246, 0.95), rgba(37, 99, 235, 0.95));
             border: 1px solid rgba(59, 130, 246, 0.3);
         }
-        
+
         .toast-icon {
             font-size: 24px;
             flex-shrink: 0;
         }
-        
+
         .toast-message {
             flex: 1;
             color: white;
@@ -807,36 +879,38 @@
             font-weight: 500;
             line-height: 1.4;
         }
-        
+
         @keyframes slideInRight {
             from {
                 opacity: 0;
                 transform: translateX(100%);
             }
+
             to {
                 opacity: 1;
                 transform: translateX(0);
             }
         }
-        
+
         @keyframes slideOutRight {
             from {
                 opacity: 1;
                 transform: translateX(0);
             }
+
             to {
                 opacity: 0;
                 transform: translateX(100%);
             }
         }
-        
+
         @media (max-width: 768px) {
             #toastContainer {
                 top: 70px;
                 right: 12px;
                 left: 12px;
             }
-            
+
             .toast {
                 min-width: auto;
                 max-width: none;
@@ -848,7 +922,7 @@
 <body>
     <!-- Toast Container -->
     <div id="toastContainer"></div>
-    
+
     <!-- Navbar -->
     <nav class="navbar">
         <div class="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
@@ -857,94 +931,89 @@
                 <h1 class="text-lg font-bold" style="color: white;">灵汇 (InspLink)</h1>
             </div>
             <div class="flex items-center gap-4">
-                <a href="https://chromewebstore.google.com/detail/ljolccnkjeknegdndamehdpljmklngfn" 
-                   target="_blank"
-                   class="inline-flex items-center gap-2 px-5 py-2 text-sm font-semibold rounded-lg transition-all"
-                   style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%); 
+                <a href="https://chromewebstore.google.com/detail/ljolccnkjeknegdndamehdpljmklngfn" target="_blank"
+                    class="inline-flex items-center gap-2 px-5 py-2 text-sm font-semibold rounded-lg transition-all"
+                    style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%); 
                           border: 1.5px solid rgba(139, 92, 246, 0.4); 
                           color: rgba(255, 255, 255, 0.95); 
                           backdrop-filter: blur(10px);
                           text-decoration: none;
                           box-shadow: 0 2px 8px rgba(139, 92, 246, 0.15);"
-                   onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 16px rgba(139, 92, 246, 0.3)'; this.style.borderColor='rgba(139, 92, 246, 0.6)'"
-                   onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(139, 92, 246, 0.15)'; this.style.borderColor='rgba(139, 92, 246, 0.4)'">
+                    onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 16px rgba(139, 92, 246, 0.3)'; this.style.borderColor='rgba(139, 92, 246, 0.6)'"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(139, 92, 246, 0.15)'; this.style.borderColor='rgba(139, 92, 246, 0.4)'">
                     <span>🚀</span>
                     <span>Chrome</span>
                 </a>
-                <a href="#" 
-                   class="inline-flex items-center gap-2 px-5 py-2 text-sm font-semibold rounded-lg transition-all"
-                   style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%); 
+                <a href="#"
+                    class="inline-flex items-center gap-2 px-5 py-2 text-sm font-semibold rounded-lg transition-all"
+                    style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%); 
                           border: 1.5px solid rgba(139, 92, 246, 0.4); 
                           color: rgba(255, 255, 255, 0.95); 
                           backdrop-filter: blur(10px);
                           text-decoration: none;
                           box-shadow: 0 2px 8px rgba(139, 92, 246, 0.15);"
-                   onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 16px rgba(139, 92, 246, 0.3)'; this.style.borderColor='rgba(139, 92, 246, 0.6)'"
-                   onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(139, 92, 246, 0.15)'; this.style.borderColor='rgba(139, 92, 246, 0.4)'">
+                    onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 16px rgba(139, 92, 246, 0.3)'; this.style.borderColor='rgba(139, 92, 246, 0.6)'"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(139, 92, 246, 0.15)'; this.style.borderColor='rgba(139, 92, 246, 0.4)'">
                     <span>📝</span>
                     <span>Obsidian</span>
                 </a>
             </div>
         </div>
     </nav>
-    
+
     <!-- Hero Section -->
     <section class="min-h-screen flex items-center justify-center px-6 py-20" style="position: relative; z-index: 1;">
         <div class="max-w-7xl mx-auto w-full">
             <!-- Title -->
             <div class="text-center mb-8 px-4">
-                <h2 class="text-4xl md:text-6xl font-extrabold mb-5" style="font-family: var(--font-display); letter-spacing: -0.02em; line-height: 1.25;">
+                <h2 class="text-4xl md:text-6xl font-extrabold mb-5"
+                    style="font-family: var(--font-display); letter-spacing: -0.02em; line-height: 1.25;">
                     <span style="color: white; text-shadow: 0 2px 20px rgba(255, 255, 255, 0.2);">知识连接</span>
                     <br>
-                    <span style="background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 40%, #ec4899 70%, #f59e0b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 2px 8px rgba(168, 85, 247, 0.3)); letter-spacing: 0.02em;">思维觉醒</span>
+                    <span
+                        style="background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 40%, #ec4899 70%, #f59e0b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 2px 8px rgba(168, 85, 247, 0.3)); letter-spacing: 0.02em;">思维觉醒</span>
                 </h2>
-                <p class="text-lg md:text-xl mb-3" style="color: rgba(255, 255, 255, 0.85); font-weight: 500; line-height: 1.6; max-width: 650px; margin: 0 auto;">
+                <p class="text-lg md:text-xl mb-3"
+                    style="color: rgba(255, 255, 255, 0.85); font-weight: 500; line-height: 1.6; max-width: 650px; margin: 0 auto;">
                     在你的笔记间发现那些"原来还可以这样连接"的惊喜
                 </p>
-                <p class="text-sm md:text-base mb-6" style="color: rgba(255, 255, 255, 0.75); font-weight: 500; animation: bounce-slow 2s ease-in-out infinite;">
+                <p class="text-sm md:text-base mb-6"
+                    style="color: rgba(255, 255, 255, 0.75); font-weight: 500; animation: bounce-slow 2s ease-in-out infinite;">
                     👇 点击发光的连接，立即体验魔法
                 </p>
             </div>
-            
+
             <!-- 特性标签 - 轻盈版 -->
             <div class="flex flex-wrap justify-center items-center gap-2 max-w-2xl mx-auto mb-6 px-4">
-                <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full feature-tag" 
-                     style="background: rgba(255, 255, 255, 0.05); 
+                <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full feature-tag" style="background: rgba(255, 255, 255, 0.05); 
                             border: 1px solid rgba(255, 255, 255, 0.1);
                             backdrop-filter: blur(10px);
-                            cursor: pointer;"
-                     onclick="showFeatureTooltip('ai', this)"
-                     title="点击了解更多">
+                            cursor: pointer;" onclick="showFeatureTooltip('ai', this)" title="点击了解更多">
                     <span class="feature-emoji" style="font-size: 14px;">🔗</span>
                     <span class="text-xs font-medium" style="color: rgba(255, 255, 255, 0.7);">AI 智能连接</span>
                 </div>
-                <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full feature-tag" 
-                     style="background: rgba(255, 255, 255, 0.05); 
+                <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full feature-tag" style="background: rgba(255, 255, 255, 0.05); 
                             border: 1px solid rgba(255, 255, 255, 0.1);
                             backdrop-filter: blur(10px);
-                            cursor: pointer;"
-                     onclick="showFeatureTooltip('cross', this)"
-                     title="点击了解更多">
+                            cursor: pointer;" onclick="showFeatureTooltip('cross', this)" title="点击了解更多">
                     <span class="feature-emoji" style="font-size: 14px;">🧠</span>
                     <span class="text-xs font-medium" style="color: rgba(255, 255, 255, 0.7);">跨领域思考</span>
                 </div>
-                <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full feature-tag" 
-                     style="background: rgba(255, 255, 255, 0.05); 
+                <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full feature-tag" style="background: rgba(255, 255, 255, 0.05); 
                             border: 1px solid rgba(255, 255, 255, 0.1);
                             backdrop-filter: blur(10px);
-                            cursor: pointer;"
-                     onclick="showFeatureTooltip('instant', this)"
-                     title="点击了解更多">
+                            cursor: pointer;" onclick="showFeatureTooltip('instant', this)" title="点击了解更多">
                     <span class="feature-emoji" style="font-size: 14px;">⚡</span>
                     <span class="text-xs font-medium" style="color: rgba(255, 255, 255, 0.7);">即时体验</span>
                 </div>
             </div>
-            
+
             <!-- Feature Tooltip -->
-            <div id="featureTooltip" class="hidden" style="position: fixed; z-index: 2001; max-width: 300px; padding: 16px; background: rgba(17, 17, 19, 0.98); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; backdrop-filter: blur(20px); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);">
+            <div id="featureTooltip" class="hidden"
+                style="position: fixed; z-index: 2001; max-width: 300px; padding: 16px; background: rgba(17, 17, 19, 0.98); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; backdrop-filter: blur(20px); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);">
                 <div id="tooltipContent"></div>
             </div>
-            
+
             <!-- Network Graph -->
             <div id="network-graph" class="mb-6">
                 <!-- Skeleton Loading State -->
@@ -965,46 +1034,61 @@
                     <div class="skeleton-node" style="left: 80%; top: 20%;"></div>
                     <div class="skeleton-node" style="left: 85%; top: 45%;"></div>
                     <div class="skeleton-node" style="left: 80%; top: 70%;"></div>
-                    
+
                     <!-- Skeleton links -->
-                    <div class="skeleton-link" style="left: 18%; top: 28%; width: 120px; transform: rotate(25deg);"></div>
-                    <div class="skeleton-link" style="left: 28%; top: 20%; width: 100px; transform: rotate(-15deg);"></div>
-                    <div class="skeleton-link" style="left: 23%; top: 52%; width: 90px; transform: rotate(35deg);"></div>
-                    <div class="skeleton-link" style="left: 48%; top: 25%; width: 150px; transform: rotate(-10deg);"></div>
-                    <div class="skeleton-link" style="left: 68%; top: 30%; width: 110px; transform: rotate(20deg);"></div>
+                    <div class="skeleton-link" style="left: 18%; top: 28%; width: 120px; transform: rotate(25deg);">
+                    </div>
+                    <div class="skeleton-link" style="left: 28%; top: 20%; width: 100px; transform: rotate(-15deg);">
+                    </div>
+                    <div class="skeleton-link" style="left: 23%; top: 52%; width: 90px; transform: rotate(35deg);">
+                    </div>
+                    <div class="skeleton-link" style="left: 48%; top: 25%; width: 150px; transform: rotate(-10deg);">
+                    </div>
+                    <div class="skeleton-link" style="left: 68%; top: 30%; width: 110px; transform: rotate(20deg);">
+                    </div>
                 </div>
             </div>
-            
+
             <!-- Legend -->
             <div class="flex flex-wrap justify-center items-center gap-5 md:gap-8 text-sm md:text-base">
-                <div class="flex items-center gap-2.5 opacity-75 hover:opacity-100 transition-all hover:scale-110 cursor-pointer">
-                    <div class="w-3 h-3 rounded-full shadow-lg" style="background: #3B82F6; box-shadow: 0 0 10px rgba(59, 130, 246, 0.6);"></div>
+                <div
+                    class="flex items-center gap-2.5 opacity-75 hover:opacity-100 transition-all hover:scale-110 cursor-pointer">
+                    <div class="w-3 h-3 rounded-full shadow-lg"
+                        style="background: #3B82F6; box-shadow: 0 0 10px rgba(59, 130, 246, 0.6);"></div>
                     <span style="color: rgba(255, 255, 255, 0.9); font-weight: 500;">科技</span>
                 </div>
-                <div class="flex items-center gap-2.5 opacity-75 hover:opacity-100 transition-all hover:scale-110 cursor-pointer">
-                    <div class="w-3 h-3 rounded-full shadow-lg" style="background: #10B981; box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);"></div>
+                <div
+                    class="flex items-center gap-2.5 opacity-75 hover:opacity-100 transition-all hover:scale-110 cursor-pointer">
+                    <div class="w-3 h-3 rounded-full shadow-lg"
+                        style="background: #10B981; box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);"></div>
                     <span style="color: rgba(255, 255, 255, 0.9); font-weight: 500;">商业</span>
                 </div>
-                <div class="flex items-center gap-2.5 opacity-75 hover:opacity-100 transition-all hover:scale-110 cursor-pointer">
-                    <div class="w-3 h-3 rounded-full shadow-lg" style="background: #F59E0B; box-shadow: 0 0 10px rgba(245, 158, 11, 0.6);"></div>
+                <div
+                    class="flex items-center gap-2.5 opacity-75 hover:opacity-100 transition-all hover:scale-110 cursor-pointer">
+                    <div class="w-3 h-3 rounded-full shadow-lg"
+                        style="background: #F59E0B; box-shadow: 0 0 10px rgba(245, 158, 11, 0.6);"></div>
                     <span style="color: rgba(255, 255, 255, 0.9); font-weight: 500;">心理学</span>
                 </div>
-                <div class="flex items-center gap-2.5 opacity-75 hover:opacity-100 transition-all hover:scale-110 cursor-pointer">
-                    <div class="w-3 h-3 rounded-full shadow-lg" style="background: #8B5CF6; box-shadow: 0 0 10px rgba(139, 92, 246, 0.6);"></div>
+                <div
+                    class="flex items-center gap-2.5 opacity-75 hover:opacity-100 transition-all hover:scale-110 cursor-pointer">
+                    <div class="w-3 h-3 rounded-full shadow-lg"
+                        style="background: #8B5CF6; box-shadow: 0 0 10px rgba(139, 92, 246, 0.6);"></div>
                     <span style="color: rgba(255, 255, 255, 0.9); font-weight: 500;">历史</span>
                 </div>
-                <div class="flex items-center gap-2.5 opacity-75 hover:opacity-100 transition-all hover:scale-110 cursor-pointer">
-                    <div class="w-3 h-3 rounded-full shadow-lg" style="background: #EC4899; box-shadow: 0 0 10px rgba(236, 72, 153, 0.6);"></div>
+                <div
+                    class="flex items-center gap-2.5 opacity-75 hover:opacity-100 transition-all hover:scale-110 cursor-pointer">
+                    <div class="w-3 h-3 rounded-full shadow-lg"
+                        style="background: #EC4899; box-shadow: 0 0 10px rgba(236, 72, 153, 0.6);"></div>
                     <span style="color: rgba(255, 255, 255, 0.9); font-weight: 500;">跨领域</span>
                 </div>
             </div>
         </div>
     </section>
-    
+
     <!-- Function Section -->
     <section class="min-h-screen px-6 py-20" style="position: relative; z-index: 1;">
         <div class="max-w-7xl mx-auto">
-            
+
             <!-- Section Title -->
             <div class="text-center mb-12">
                 <h3 class="text-3xl md:text-4xl font-bold mb-4" style="color: white;">
@@ -1014,50 +1098,57 @@
                     导入文章，让AI帮你发现隐藏的知识连接
                 </p>
             </div>
-            
+
             <!-- Action Buttons -->
             <div class="flex flex-wrap justify-center gap-4 mb-12">
                 <button onclick="loadTestArticles()" class="btn btn-primary">
                     <span>🚀</span>
                     <span>加载演示文章</span>
                 </button>
-                
-                <button onclick="document.getElementById('fileInput').click()" class="btn" style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.8), rgba(124, 58, 237, 0.8)); border: 1.5px solid rgba(139, 92, 246, 0.4);">
+
+                <button onclick="document.getElementById('fileInput').click()" class="btn"
+                    style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.8), rgba(124, 58, 237, 0.8)); border: 1.5px solid rgba(139, 92, 246, 0.4);">
                     <span>📥</span>
                     <span>导入文章</span>
                 </button>
                 <input type="file" id="fileInput" accept=".json,.md,.markdown,.txt" multiple class="hidden">
-                
+
                 <div class="relative">
-                    <button onclick="toggleExportMenu()" id="exportBtn" class="btn" style="background: linear-gradient(135deg, rgba(249, 115, 22, 0.8), rgba(234, 88, 12, 0.8)); border: 1.5px solid rgba(249, 115, 22, 0.4);">
+                    <button onclick="toggleExportMenu()" id="exportBtn" class="btn"
+                        style="background: linear-gradient(135deg, rgba(249, 115, 22, 0.8), rgba(234, 88, 12, 0.8)); border: 1.5px solid rgba(249, 115, 22, 0.4);">
                         <span>📤</span>
                         <span>导出文章</span>
                         <span style="margin-left: 4px;">▼</span>
                     </button>
-                    
-                    <div id="exportMenu" class="hidden absolute top-full mt-2 left-0 rounded-lg shadow-lg z-10 min-w-48" style="background: var(--surface-850); border: 1px solid var(--border-primary);">
-                        <button onclick="exportAsJSON()" class="w-full text-left px-4 py-3 hover:bg-white/5 border-b border-white/10 flex items-center gap-2 transition-colors">
+
+                    <div id="exportMenu" class="hidden absolute top-full mt-2 left-0 rounded-lg shadow-lg z-10 min-w-48"
+                        style="background: var(--surface-850); border: 1px solid var(--border-primary);">
+                        <button onclick="exportAsJSON()"
+                            class="w-full text-left px-4 py-3 hover:bg-white/5 border-b border-white/10 flex items-center gap-2 transition-colors">
                             <span class="text-lg">📄</span>
                             <div>
                                 <div class="font-medium" style="color: var(--text-primary);">JSON</div>
                                 <div class="text-xs" style="color: var(--text-tertiary);">完整数据格式</div>
                             </div>
                         </button>
-                        <button onclick="exportAsMarkdown()" class="w-full text-left px-4 py-3 hover:bg-white/5 border-b border-white/10 flex items-center gap-2 transition-colors">
+                        <button onclick="exportAsMarkdown()"
+                            class="w-full text-left px-4 py-3 hover:bg-white/5 border-b border-white/10 flex items-center gap-2 transition-colors">
                             <span class="text-lg">📝</span>
                             <div>
                                 <div class="font-medium" style="color: var(--text-primary);">Markdown ZIP</div>
                                 <div class="text-xs" style="color: var(--text-tertiary);">每篇文章一个.md文件</div>
                             </div>
                         </button>
-                        <button onclick="exportAsCSV()" class="w-full text-left px-4 py-3 hover:bg-white/5 border-b border-white/10 flex items-center gap-2 transition-colors">
+                        <button onclick="exportAsCSV()"
+                            class="w-full text-left px-4 py-3 hover:bg-white/5 border-b border-white/10 flex items-center gap-2 transition-colors">
                             <span class="text-lg">📊</span>
                             <div>
                                 <div class="font-medium" style="color: var(--text-primary);">CSV</div>
                                 <div class="text-xs" style="color: var(--text-tertiary);">Excel表格格式</div>
                             </div>
                         </button>
-                        <button onclick="exportAsHTML()" class="w-full text-left px-4 py-3 hover:bg-white/5 flex items-center gap-2 transition-colors">
+                        <button onclick="exportAsHTML()"
+                            class="w-full text-left px-4 py-3 hover:bg-white/5 flex items-center gap-2 transition-colors">
                             <span class="text-lg">🌐</span>
                             <div>
                                 <div class="font-medium" style="color: var(--text-primary);">HTML</div>
@@ -1066,13 +1157,14 @@
                         </button>
                     </div>
                 </div>
-                
-                <button onclick="findConnections()" class="btn" style="background: linear-gradient(135deg, rgba(236, 72, 153, 0.8), rgba(219, 39, 119, 0.8)); border: 1.5px solid rgba(236, 72, 153, 0.4);">
+
+                <button onclick="findConnections()" class="btn"
+                    style="background: linear-gradient(135deg, rgba(236, 72, 153, 0.8), rgba(219, 39, 119, 0.8)); border: 1.5px solid rgba(236, 72, 153, 0.4);">
                     <span>🔍</span>
                     <span>发现连接</span>
                 </button>
             </div>
-            
+
             <!-- Articles Container -->
             <div id="articlesContainer" class="mb-12">
                 <div class="text-center py-12" style="color: rgba(255, 255, 255, 0.5);">
@@ -1081,7 +1173,7 @@
                     <p>点击"加载演示文章"体验AI的神奇，或导入你自己的文章</p>
                 </div>
             </div>
-            
+
             <!-- Connections Result -->
             <div id="connectionsResult" class="hidden">
                 <h3 class="text-2xl font-bold mb-6 text-center" style="color: white;">
@@ -1091,7 +1183,7 @@
             </div>
         </div>
     </section>
-    
+
     <!-- Connection Modal -->
     <div id="connectionModal" class="modal">
         <div class="modal-content p-8">
@@ -1099,36 +1191,38 @@
                 <h3 class="text-2xl font-bold" style="color: var(--text-primary);">
                     💡 <span id="connectionType">跨界启发</span>
                 </h3>
-                <button onclick="closeConnectionModal()" 
-                        class="text-gray-400 hover:text-gray-200 transition-colors">
+                <button onclick="closeConnectionModal()" class="text-gray-400 hover:text-gray-200 transition-colors">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
             </div>
-            
+
             <div class="mb-6">
                 <div class="flex justify-between items-center mb-2">
                     <span class="text-sm" style="color: var(--text-secondary);">置信度</span>
                     <span id="confidenceValue" class="text-sm font-bold" style="color: #10B981;">85%</span>
                 </div>
                 <div class="w-full bg-gray-700 rounded-full h-2">
-                    <div id="confidenceBar" style="width: 85%; height: 100%; background: linear-gradient(to right, #10B981, #22c55e); border-radius: 4px; transition: width 0.5s ease;"></div>
+                    <div id="confidenceBar"
+                        style="width: 85%; height: 100%; background: linear-gradient(to right, #10B981, #22c55e); border-radius: 4px; transition: width 0.5s ease;">
+                    </div>
                 </div>
             </div>
-            
+
             <div class="mb-6">
                 <h4 class="text-lg font-semibold mb-3" style="color: var(--text-primary);">🔗 为什么这两篇会连接？</h4>
                 <p id="connectionReason" class="leading-relaxed" style="color: var(--text-secondary);">
                     加载中...
                 </p>
             </div>
-            
+
             <div class="mb-8">
                 <h4 class="text-lg font-semibold mb-3" style="color: var(--text-primary);">🏷️ 共同概念</h4>
                 <div id="commonConcepts" class="flex flex-wrap gap-2"></div>
             </div>
-            
+
             <div class="border-t pt-6" style="border-color: var(--border-primary);">
                 <div class="text-center mb-4">
                     <p class="text-lg font-semibold mb-2" style="color: var(--text-primary);">
@@ -1138,7 +1232,8 @@
                         让知识自动连接，开启跨领域思考之旅
                     </p>
                 </div>
-                <button onclick="showRegisterModal()" class="btn btn-primary w-full mb-3" style="position: relative; overflow: hidden;">
+                <button onclick="showRegisterModal()" class="btn btn-primary w-full mb-3"
+                    style="position: relative; overflow: hidden;">
                     <span style="position: relative; z-index: 1;">
                         🚀 免费开始 - 30秒注册
                     </span>
@@ -1148,17 +1243,15 @@
                     <span>✓ 永久免费</span>
                     <span>✓ 随时取消</span>
                 </div>
-                <button onclick="closeConnectionModal()" 
-                        class="w-full py-2 text-sm transition-colors"
-                        style="color: var(--text-tertiary);"
-                        onmouseover="this.style.color='var(--text-secondary)'"
-                        onmouseout="this.style.color='var(--text-tertiary)'">
+                <button onclick="closeConnectionModal()" class="w-full py-2 text-sm transition-colors"
+                    style="color: var(--text-tertiary);" onmouseover="this.style.color='var(--text-secondary)'"
+                    onmouseout="this.style.color='var(--text-tertiary)'">
                     稍后再说，继续探索
                 </button>
             </div>
         </div>
     </div>
-    
+
     <!-- Register Modal -->
     <div id="registerModal" class="modal">
         <div class="modal-content p-8">
@@ -1167,85 +1260,98 @@
                     <h3 class="text-2xl font-bold mb-2" style="color: var(--text-primary);">🚀 开始你的知识之旅</h3>
                     <p class="text-sm" style="color: var(--text-secondary);">30秒注册，立即体验 AI 知识连接</p>
                 </div>
-                <button onclick="closeRegisterModal()" 
-                        class="text-gray-400 hover:text-gray-200 transition-colors">
+                <button onclick="closeRegisterModal()" class="text-gray-400 hover:text-gray-200 transition-colors">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
             </div>
-            
+
             <!-- Social Login Hint -->
-            <div class="mb-6 p-4 rounded-lg" style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2);">
+            <div class="mb-6 p-4 rounded-lg"
+                style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2);">
                 <p class="text-sm text-center" style="color: var(--text-secondary);">
                     💡 提示：即将支持 Google 和 GitHub 一键登录
                 </p>
             </div>
             <form id="registerForm" onsubmit="handleRegister(event)">
-                <div id="registerError" class="mb-4 p-3 rounded-lg" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; display: none;"></div>
-                <div id="registerSuccess" class="mb-4 p-3 rounded-lg" style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: #10b981; display: none;"></div>
-                
+                <div id="registerError" class="mb-4 p-3 rounded-lg"
+                    style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; display: none;">
+                </div>
+                <div id="registerSuccess" class="mb-4 p-3 rounded-lg"
+                    style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: #10b981; display: none;">
+                </div>
+
                 <div class="mb-4">
-                    <label for="registerEmail" class="block text-sm font-medium mb-2" style="color: var(--text-secondary);">
+                    <label for="registerEmail" class="block text-sm font-medium mb-2"
+                        style="color: var(--text-secondary);">
                         邮箱地址
                     </label>
-                    <input type="email" id="registerEmail" placeholder="your@email.com" 
-                           class="input-field w-full px-4 py-3 rounded-lg focus:outline-none"
-                           required>
+                    <input type="email" id="registerEmail" placeholder="your@email.com"
+                        class="input-field w-full px-4 py-3 rounded-lg focus:outline-none" required>
                 </div>
-                
+
                 <div class="mb-4">
-                    <label for="registerPassword" class="block text-sm font-medium mb-2" style="color: var(--text-secondary);">
+                    <label for="registerPassword" class="block text-sm font-medium mb-2"
+                        style="color: var(--text-secondary);">
                         密码 <span class="text-xs" style="color: var(--text-tertiary);">(至少 6 位)</span>
                     </label>
-                    <input type="password" id="registerPassword" placeholder="••••••••" 
-                           class="input-field w-full px-4 py-3 rounded-lg focus:outline-none"
-                           minlength="6"
-                           required>
+                    <input type="password" id="registerPassword" placeholder="••••••••"
+                        class="input-field w-full px-4 py-3 rounded-lg focus:outline-none" minlength="6" required>
                 </div>
-                
+
                 <div class="mb-6 flex items-start gap-2">
                     <input type="checkbox" id="agreeTerms" required class="mt-1">
                     <label for="agreeTerms" class="text-xs" style="color: var(--text-tertiary);">
-                        我同意<a href="#" class="underline" style="color: var(--primary-400);">服务条款</a>和<a href="#" class="underline" style="color: var(--primary-400);">隐私政策</a>
+                        我同意<a href="#" class="underline" style="color: var(--primary-400);">服务条款</a>和<a href="#"
+                            class="underline" style="color: var(--primary-400);">隐私政策</a>
                     </label>
                 </div>
-                
+
                 <button type="submit" id="registerBtn" class="btn btn-primary w-full relative overflow-hidden mb-4">
                     <span id="registerBtnText" class="relative z-10">🚀 立即注册 - 完全免费</span>
                     <span id="registerBtnLoading" class="relative z-10" style="display: none;">
                         <span class="loading-spinner mr-2"></span>注册中...
                     </span>
                 </button>
-                
+
                 <p class="text-xs text-center" style="color: var(--text-tertiary);">
                     已有账号？<a href="#" class="underline" style="color: var(--primary-400);">立即登录</a>
                 </p>
             </form>
-            <button onclick="closeRegisterModal()" 
-                    class="w-full mt-4 py-2 transition-colors text-sm"
-                    style="color: var(--text-tertiary);"
-                    onmouseover="this.style.color='var(--text-secondary)'"
-                    onmouseout="this.style.color='var(--text-tertiary)'">
+            <button onclick="closeRegisterModal()" class="w-full mt-4 py-2 transition-colors text-sm"
+                style="color: var(--text-tertiary);" onmouseover="this.style.color='var(--text-secondary)'"
+                onmouseout="this.style.color='var(--text-tertiary)'">
                 取消
             </button>
         </div>
     </div>
-    
+
     <script>
+        // Supabase配置
+        const SUPABASE_URL = 'https://xzvtievyylylhsywttve.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh6dnRpZXZ5eWx5bGhzeXd0dHZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI4NzQ4MzQsImV4cCI6MjA3ODQ1MDgzNH0.mq3LkBqVjisE-hsjyEUHtp3na_F3U9qzyWamhD-F9Nk';
+
+        // 保留demo数据API（如果需要）
+        // Supabase配置
+        const SUPABASE_URL = 'https://xzvtievyylylhsywttve.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh6dnRpZXZ5eWx5bGhzeXd0dHZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI4NzQ4MzQsImV4cCI6MjA3ODQ1MDgzNH0.mq3LkBqVjisE-hsjyEUHtp3na_F3U9qzyWamhD-F9Nk';
+        
+        // 保留demo数据API（如果需要）
         const API_BASE_URL = 'https://lingshu-api.cchang0727.workers.dev';
         let demoData = null;
         let explanations = null;
-        
+
         // Toast Notification System
-        window.showToast = function(message, type = 'info', duration = 3000) {
+        window.showToast = function (message, type = 'info', duration = 3000) {
             // Get toast container (already exists in HTML)
             const container = document.getElementById('toastContainer');
             if (!container) {
                 console.error('Toast container not found');
                 return;
             }
-            
+
             // Limit to 3 toasts maximum
             const existingToasts = container.querySelectorAll('.toast:not(.hiding)');
             if (existingToasts.length >= 3) {
@@ -1253,26 +1359,26 @@
                 oldestToast.classList.add('hiding');
                 setTimeout(() => oldestToast.remove(), 300);
             }
-            
+
             // Create toast element
             const toast = document.createElement('div');
             toast.className = `toast toast-${type}`;
-            
+
             // Set icon based on type
             const icons = {
                 success: '✅',
                 error: '❌',
                 info: 'ℹ️'
             };
-            
+
             toast.innerHTML = `
                 <div class="toast-icon">${icons[type] || icons.info}</div>
                 <div class="toast-message">${message}</div>
             `;
-            
+
             // Add to container
             container.appendChild(toast);
-            
+
             // Auto remove after duration
             setTimeout(() => {
                 toast.classList.add('hiding');
@@ -1281,27 +1387,27 @@
                 }, 300);
             }, duration);
         };
-        
+
         async function loadDemoData() {
             try {
                 // Add timeout to prevent hanging
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 5000);
-                
+
                 const response = await fetch(`${API_BASE_URL}/api/demo/graph`, {
                     signal: controller.signal
                 });
                 clearTimeout(timeoutId);
-                
+
                 const result = await response.json();
                 if (result.success) {
                     demoData = result.data;
                     explanations = result.data.explanations;
-                    
+
                     // 重新分配颜色 - 更自然的分布
                     const colorMap = {
                         '科技': '#3B82F6',
-                        '商业': '#10B981', 
+                        '商业': '#10B981',
                         '心理学': '#F59E0B',
                         '历史': '#8B5CF6',
                         '跨领域': '#EC4899'
@@ -1309,7 +1415,7 @@
                     demoData.nodes.forEach(node => {
                         node.color = colorMap[node.domain] || '#3B82F6';
                     });
-                    
+
                     console.log('Demo data loaded:', result.meta);
                     return true;
                 }
@@ -1322,7 +1428,7 @@
             }
             return false;
         }
-        
+
         // Debounce function for performance
         function debounce(func, wait) {
             let timeout;
@@ -1335,7 +1441,7 @@
                 timeout = setTimeout(later, wait);
             };
         }
-        
+
         function useFallbackData() {
             demoData = {
                 nodes: [
@@ -1370,10 +1476,10 @@
             };
             explanations = {};
         }
-        
+
         function initNetworkGraph() {
             if (!demoData) return;
-            
+
             // Remove skeleton loader
             const skeleton = document.getElementById('skeleton-loader');
             if (skeleton) {
@@ -1381,25 +1487,25 @@
                 skeleton.style.transition = 'opacity 0.3s ease';
                 setTimeout(() => skeleton.remove(), 300);
             }
-            
+
             const container = document.getElementById('network-graph');
             const width = container.clientWidth;
             const height = container.clientHeight;
-            
+
             const svg = d3.select('#network-graph')
                 .append('svg')
                 .attr('width', width)
                 .attr('height', height)
                 .attr('viewBox', `0 0 ${width} ${height}`);
-            
+
             // Add padding group - 增加到60px确保节点不被切
             const padding = 60;
             const g = svg.append('g')
                 .attr('transform', `translate(${padding}, ${padding})`);
-            
+
             const graphWidth = width - padding * 2;
             const graphHeight = height - padding * 2;
-            
+
             // 添加SVG滤镜定义（发光效果）
             const defs = svg.append('defs');
             const filter = defs.append('filter')
@@ -1408,15 +1514,15 @@
                 .attr('y', '-50%')
                 .attr('width', '200%')
                 .attr('height', '200%');
-            
+
             filter.append('feGaussianBlur')
                 .attr('stdDeviation', '4')
                 .attr('result', 'coloredBlur');
-            
+
             const feMerge = filter.append('feMerge');
             feMerge.append('feMergeNode').attr('in', 'coloredBlur');
             feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
-            
+
             // 固定位置布局 - 精心设计的星空分布
             const positions = [
                 { x: 0.15, y: 0.25 }, { x: 0.25, y: 0.15 }, { x: 0.35, y: 0.30 },
@@ -1425,29 +1531,29 @@
                 { x: 0.65, y: 0.25 }, { x: 0.70, y: 0.50 }, { x: 0.65, y: 0.75 },
                 { x: 0.80, y: 0.20 }, { x: 0.85, y: 0.45 }, { x: 0.80, y: 0.70 }
             ];
-            
+
             demoData.nodes.forEach((node, i) => {
                 node.x = positions[i].x * graphWidth;
                 node.y = positions[i].y * graphHeight;
                 node.fx = node.x; // 固定X位置
                 node.fy = node.y; // 固定Y位置
             });
-            
+
             // Simulation 用于计算连线，但节点位置固定
             const simulation = d3.forceSimulation(demoData.nodes)
                 .force('link', d3.forceLink(demoData.links).id(d => d.id))
                 .alphaDecay(0.5); // 快速稳定
-            
+
             const link = g.append('g')
                 .selectAll('line')
                 .data(demoData.links)
                 .enter()
                 .append('line')
                 .attr('class', 'link')
-                .on('click', function(event, d) {
+                .on('click', function (event, d) {
                     showConnectionModal(d);
                 });
-            
+
             const node = g.append('g')
                 .selectAll('g')
                 .data(demoData.nodes)
@@ -1458,7 +1564,7 @@
                     .on('start', dragstarted)
                     .on('drag', dragged)
                     .on('end', dragended));
-            
+
             node.append('circle')
                 .attr('r', 28)
                 .attr('fill', d => d.color)
@@ -1477,7 +1583,7 @@
                     const durations = ['2.5s', '3s', '3.5s', '4s'];
                     return durations[i % 4];
                 });
-            
+
             node.append('text')
                 .text(d => d.title.substring(0, 4))
                 .attr('text-anchor', 'middle')
@@ -1489,40 +1595,40 @@
                 .style('text-shadow', '0 2px 8px rgba(0, 0, 0, 0.4)')
                 .style('letter-spacing', '-0.5px')
                 .style('transition', 'transform 0.3s ease');
-            
-            node.on('mouseenter', function(event, d) {
+
+            node.on('mouseenter', function (event, d) {
                 highlightNode(d, node, link);
             });
-            
-            node.on('mouseleave', function() {
+
+            node.on('mouseleave', function () {
                 resetHighlight(node, link);
             });
-            
+
             // 触摸设备优化
             if ('ontouchstart' in window) {
                 let touchTimeout;
-                node.on('touchstart', function(event, d) {
+                node.on('touchstart', function (event, d) {
                     event.preventDefault();
                     clearTimeout(touchTimeout);
                     highlightNode(d, node, link);
-                    
+
                     touchTimeout = setTimeout(() => {
                         resetHighlight(node, link);
                     }, 3000);
                 });
-                
-                link.on('touchstart', function(event, d) {
+
+                link.on('touchstart', function (event, d) {
                     event.preventDefault();
                     showConnectionModal(d);
                     removeGuideArrow();
                 });
             }
-            
+
             // Use requestAnimationFrame for smoother animations
             let rafId;
             simulation.on('tick', () => {
                 if (rafId) return; // Skip if already scheduled
-                
+
                 rafId = requestAnimationFrame(() => {
                     // 边界约束 - 确保节点不超出可视区域
                     demoData.nodes.forEach(d => {
@@ -1530,36 +1636,36 @@
                         d.x = Math.max(nodeRadius, Math.min(graphWidth - nodeRadius, d.x));
                         d.y = Math.max(nodeRadius, Math.min(graphHeight - nodeRadius, d.y));
                     });
-                    
+
                     link
                         .attr('x1', d => d.source.x)
                         .attr('y1', d => d.source.y)
                         .attr('x2', d => d.target.x)
                         .attr('y2', d => d.target.y);
-                    
+
                     node.attr('transform', d => `translate(${d.x},${d.y})`);
-                    
+
                     rafId = null;
                 });
             });
-            
+
             function dragstarted(event, d) {
                 if (!event.active) simulation.alphaTarget(0.3).restart();
                 d.fx = d.x;
                 d.fy = d.y;
             }
-            
+
             function dragged(event, d) {
                 d.fx = event.x;
                 d.fy = event.y;
             }
-            
+
             function dragended(event, d) {
                 if (!event.active) simulation.alphaTarget(0);
                 d.fx = null;
                 d.fy = null;
             }
-            
+
             function highlightNode(hoveredNode, nodeSelection, linkSelection) {
                 const connectedLinks = demoData.links.filter(l =>
                     l.source.id === hoveredNode.id || l.target.id === hoveredNode.id
@@ -1577,29 +1683,29 @@
                     d.source.id === hoveredNode.id || d.target.id === hoveredNode.id
                 );
             }
-            
+
             function resetHighlight(nodeSelection, linkSelection) {
                 nodeSelection.classed('dimmed', false);
                 linkSelection.classed('dimmed', false);
                 linkSelection.classed('highlighted', false);
             }
-            
+
             // 自动高亮跨领域连接（持续切换）
             let currentPulsingLink = null;
             let pulsingIndex = 0;
             let guideArrow = null;
-            
+
             function createGuideArrow(linkData) {
                 // 检查是否是首次访问
                 const hasVisited = localStorage.getItem('lingshu_visited');
                 if (hasVisited) return;
-                
+
                 // 创建箭头容器
                 guideArrow = d3.select('#network-graph')
                     .append('div')
                     .attr('class', 'guide-arrow')
                     .style('opacity', 0);
-                
+
                 // 添加箭头 SVG
                 guideArrow.append('div')
                     .html(`
@@ -1611,17 +1717,17 @@
                                   stroke-linejoin="round"/>
                         </svg>
                     `);
-                
+
                 // 添加提示文字
                 guideArrow.append('div')
                     .attr('class', 'guide-text')
                     .style('margin-top', '8px')
                     .text('👆 点击发光的连接');
-                
+
                 // 定位箭头到连接中点上方
                 const midX = (linkData.source.x + linkData.target.x) / 2;
                 const midY = (linkData.source.y + linkData.target.y) / 2;
-                
+
                 guideArrow
                     .style('left', `${midX}px`)
                     .style('top', `${midY - 80}px`)
@@ -1629,7 +1735,7 @@
                     .transition()
                     .duration(500)
                     .style('opacity', 1);
-                
+
                 // 5 秒后淡出并移除
                 setTimeout(() => {
                     if (guideArrow) {
@@ -1643,7 +1749,7 @@
                     localStorage.setItem('lingshu_visited', 'true');
                 }, 5000);
             }
-            
+
             function removeGuideArrow() {
                 if (guideArrow) {
                     guideArrow.transition()
@@ -1654,64 +1760,64 @@
                     localStorage.setItem('lingshu_visited', 'true');
                 }
             }
-            
+
             function startAutoPulsing() {
                 const crossDomainLinks = demoData.links.filter(l => l.type === 'cross-domain');
-                
+
                 if (crossDomainLinks.length === 0) return;
-                
+
                 function switchPulsingLink() {
                     // 移除之前的脉动
                     if (currentPulsingLink) {
                         link.filter(d => d === currentPulsingLink).classed('pulsing', false);
                     }
-                    
+
                     // 添加新的脉动
                     currentPulsingLink = crossDomainLinks[pulsingIndex];
                     link.filter(d => d === currentPulsingLink).classed('pulsing', true);
-                    
+
                     // 首次显示引导箭头
                     if (pulsingIndex === 0 && !localStorage.getItem('lingshu_visited')) {
                         setTimeout(() => {
                             createGuideArrow(currentPulsingLink);
                         }, 500);
                     }
-                    
+
                     // 切换到下一个
                     pulsingIndex = (pulsingIndex + 1) % crossDomainLinks.length;
                 }
-                
+
                 // 首次执行
                 setTimeout(switchPulsingLink, 2000);
-                
+
                 // 每 5 秒切换一次
                 setInterval(switchPulsingLink, 5000);
             }
-            
+
             // 点击任何连接时移除引导（不覆盖原有的点击事件）
             const originalClick = link.on('click');
-            link.on('click', function(event, d) {
+            link.on('click', function (event, d) {
                 removeGuideArrow();
                 showConnectionModal(d);
             });
-            
+
             startAutoPulsing();
         }
-        
+
         function showConnectionModal(linkData) {
             const modal = document.getElementById('connectionModal');
             modal.classList.add('active');
-            
+
             const linkId = `${linkData.source.id}-${linkData.target.id}`;
             const explanation = explanations[linkId];
-            
+
             if (explanation) {
                 document.getElementById('connectionType').textContent = explanation.type;
                 const confidence = Math.round(explanation.confidence * 100);
                 document.getElementById('confidenceValue').textContent = `${confidence}%`;
                 document.getElementById('confidenceBar').style.width = `${confidence}%`;
                 document.getElementById('connectionReason').innerHTML = explanation.reason;
-                
+
                 const conceptsContainer = document.getElementById('commonConcepts');
                 conceptsContainer.innerHTML = '';
                 if (explanation.concepts && explanation.concepts.length > 0) {
@@ -1726,16 +1832,16 @@
                 }
             }
         }
-        
+
         function closeConnectionModal() {
             document.getElementById('connectionModal').classList.remove('active');
         }
-        
+
         function showRegisterModal() {
             closeConnectionModal();
             document.getElementById('registerModal').classList.add('active');
         }
-        
+
         function closeRegisterModal() {
             document.getElementById('registerModal').classList.remove('active');
             const form = document.getElementById('registerForm');
@@ -1745,7 +1851,7 @@
             const suc = document.getElementById('registerSuccess');
             if (suc) suc.style.display = 'none';
         }
-        
+
         // Feature tooltips
         const featureInfo = {
             ai: {
@@ -1761,28 +1867,28 @@
                 description: '无需等待，实时生成知识连接。支持 Chrome 和 Obsidian，随时随地使用。'
             }
         };
-        
+
         function showFeatureTooltip(feature, element) {
             const tooltip = document.getElementById('featureTooltip');
             const content = document.getElementById('tooltipContent');
             const info = featureInfo[feature];
-            
+
             content.innerHTML = `
                 <h4 class="font-bold mb-2" style="color: var(--text-primary);">${info.title}</h4>
                 <p class="text-sm" style="color: var(--text-secondary);">${info.description}</p>
             `;
-            
+
             const rect = element.getBoundingClientRect();
             tooltip.style.left = `${rect.left + rect.width / 2}px`;
             tooltip.style.top = `${rect.bottom + 10}px`;
             tooltip.style.transform = 'translateX(-50%)';
             tooltip.classList.remove('hidden');
-            
+
             setTimeout(() => {
                 tooltip.classList.add('hidden');
             }, 3000);
         }
-        
+
         // 点击其他地方关闭 tooltip
         document.addEventListener('click', (e) => {
             const tooltip = document.getElementById('featureTooltip');
@@ -1790,11 +1896,11 @@
                 tooltip.classList.add('hidden');
             }
         });
-        
+
         function showDownloadOptions() {
             const modal = document.getElementById('registerModal');
             const content = modal.querySelector('.modal-content');
-            
+
             content.innerHTML = `
                 <div class="text-center">
                     <div class="text-5xl mb-4">🎉</div>
@@ -1840,12 +1946,12 @@
                 </div>
             `;
         }
-        
+
         // 注册功能
         async function handleRegister(event) {
             event.preventDefault();
             console.log('handleRegister called');
-            
+
             const email = document.getElementById('registerEmail').value;
             const password = document.getElementById('registerPassword').value;
             const errorDiv = document.getElementById('registerError');
@@ -1853,78 +1959,78 @@
             const btnText = document.getElementById('registerBtnText');
             const btnLoading = document.getElementById('registerBtnLoading');
             const btn = document.getElementById('registerBtn');
-            
+
             // 隐藏之前的消息
             errorDiv.style.display = 'none';
             successDiv.style.display = 'none';
-            
+
             // 显示加载状态
             if (btnText) btnText.style.display = 'none';
             if (btnLoading) btnLoading.style.display = 'inline';
             if (btn) btn.disabled = true;
-            
+
             try {
-                console.log('Sending register request...');
-                const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
+                console.log('Sending register request to Supabase...');
+                const response = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'apikey': SUPABASE_ANON_KEY
                     },
                     body: JSON.stringify({ email, password })
                 });
-                
+
                 console.log('Response status:', response.status);
                 const result = await response.json();
                 console.log('Response data:', result);
-                
-                if (response.ok && result.success) {
+
+                if (response.ok && result.access_token) {
                     // 注册成功
                     console.log('Registration successful!');
-                    
+
                     // 保存token
-                    if (result.token) {
-                        localStorage.setItem('lingshu_token', result.token);
-                        localStorage.setItem('lingshu_user', JSON.stringify(result.user));
-                        console.log('Token saved to localStorage');
-                    }
-                    
-                    // 显示成功动画
-                    successDiv.innerHTML = `
+                    localStorage.setItem('lingshu_token', result.access_token);
+                    localStorage.setItem('lingshu_user', JSON.stringify(result.user));
+                    console.log('Token saved to localStorage');
+                }
+
+                // 显示成功动画
+                successDiv.innerHTML = `
                         <div class="text-center">
                             <div class="text-4xl mb-2">🎉</div>
                             <p class="font-semibold mb-1">注册成功！</p>
                             <p class="text-sm">正在为你准备下一步...</p>
                         </div>
                     `;
-                    successDiv.style.display = 'block';
-                    
-                    // 显示下载选项
-                    setTimeout(() => {
-                        showDownloadOptions();
-                    }, 1500);
-                } else {
-                    // 注册失败
-                    console.error('Registration failed:', result);
-                    errorDiv.textContent = result.error?.message || '注册失败，请重试';
-                    errorDiv.style.display = 'block';
-                }
-            } catch (error) {
-                console.error('注册错误:', error);
-                errorDiv.textContent = '网络错误，请检查连接后重试';
+                successDiv.style.display = 'block';
+
+                // 显示下载选项
+                setTimeout(() => {
+                    showDownloadOptions();
+                }, 1500);
+            } else {
+                // 注册失败
+                console.error('Registration failed:', result);
+                errorDiv.textContent = result.error_description || result.msg || '注册失败，请重试';
                 errorDiv.style.display = 'block';
-            } finally {
-                // 恢复按钮状态
-                if (btnText) btnText.style.display = 'inline';
-                if (btnLoading) btnLoading.style.display = 'none';
-                if (btn) btn.disabled = false;
             }
+        } catch (error) {
+            console.error('注册错误:', error);
+            errorDiv.textContent = '网络错误，请检查连接后重试';
+            errorDiv.style.display = 'block';
+        } finally {
+            // 恢复按钮状态
+            if (btnText) btnText.style.display = 'inline';
+            if (btnLoading) btnLoading.style.display = 'none';
+            if (btn) btn.disabled = false;
         }
-        
+        }
+
         // 首次访问完整引导
         function showWelcomeGuide() {
             const hasSeenGuide = localStorage.getItem('lingshu_guide_seen');
             if (hasSeenGuide) return;
-            
+
             setTimeout(() => {
                 const guide = document.createElement('div');
                 guide.id = 'welcomeGuide';
@@ -1939,7 +2045,7 @@
                     justify-content: center;
                     animation: fadeIn 0.3s ease;
                 `;
-                
+
                 guide.innerHTML = `
                     <div style="max-width: 500px; padding: 32px; background: var(--surface-850); border: 1px solid var(--border-primary); border-radius: 20px; text-align: center;">
                         <div style="font-size: 48px; margin-bottom: 16px;">👋</div>
@@ -1953,11 +2059,11 @@
                         </button>
                     </div>
                 `;
-                
+
                 document.body.appendChild(guide);
             }, 1000);
         }
-        
+
         function closeWelcomeGuide() {
             const guide = document.getElementById('welcomeGuide');
             if (guide) {
@@ -1966,15 +2072,15 @@
                 localStorage.setItem('lingshu_guide_seen', 'true');
             }
         }
-        
+
         // Use DOMContentLoaded for faster initial render
         document.addEventListener('DOMContentLoaded', async () => {
             // Start loading data immediately
             await loadDemoData();
-            
+
             // Show welcome guide for first-time visitors
             showWelcomeGuide();
-            
+
             // Wait for D3 to be ready
             if (typeof d3 === 'undefined') {
                 await new Promise(resolve => {
@@ -1986,10 +2092,10 @@
                     }, 50);
                 });
             }
-            
+
             initNetworkGraph();
         });
-        
+
         // Debounced resize handler for better performance
         const handleResize = debounce(() => {
             if (demoData) {
@@ -2000,20 +2106,20 @@
                 }
             }
         }, 300);
-        
+
         window.addEventListener('resize', handleResize, { passive: true });
-        
+
         // Article Management
         let articles = [];
         let connections = [];
-        
-        window.loadTestArticles = function() {
+
+        window.loadTestArticles = function () {
             articles = [
-                {id: 1, title: "荷兰黄金时代：现代资本主义的基石", content: "17世纪的荷兰黄金时代为现代资本主义、全球贸易网络和金融体系奠定了基础。", author: "经济历史学家", timestamp: Date.now()},
-                {id: 2, title: "ASML与荷兰半导体帝国", content: "总部位于荷兰的ASML控股公司已成为世界上最关键的半导体设备制造商。", author: "技术分析师", timestamp: Date.now() - 86400000},
-                {id: 3, title: "5G网络推动智慧城市发展", content: "5G网络的部署正在催化城市发展的革命性转变。", author: "城市规划专家", timestamp: Date.now() - 172800000}
+                { id: 1, title: "荷兰黄金时代：现代资本主义的基石", content: "17世纪的荷兰黄金时代为现代资本主义、全球贸易网络和金融体系奠定了基础。", author: "经济历史学家", timestamp: Date.now() },
+                { id: 2, title: "ASML与荷兰半导体帝国", content: "总部位于荷兰的ASML控股公司已成为世界上最关键的半导体设备制造商。", author: "技术分析师", timestamp: Date.now() - 86400000 },
+                { id: 3, title: "5G网络推动智慧城市发展", content: "5G网络的部署正在催化城市发展的革命性转变。", author: "城市规划专家", timestamp: Date.now() - 172800000 }
             ];
-            
+
             connections = [];
             for (let i = 0; i < articles.length; i++) {
                 for (let j = i + 1; j < articles.length; j++) {
@@ -2025,29 +2131,29 @@
                     });
                 }
             }
-            
+
             displayArticles();
             alert('✅ 演示文章加载完成！');
         };
-        
+
         function displayArticles() {
             const container = document.getElementById('articlesContainer');
             if (!container || !articles.length) {
                 container.innerHTML = '<div class="text-center py-12" style="color: rgba(255, 255, 255, 0.5);"><div class="text-6xl mb-4">🧠</div><p>点击"加载演示文章"或"导入文章"开始体验</p></div>';
                 return;
             }
-            
+
             container.innerHTML = '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">' +
                 articles.map(a => {
                     const conns = connections.filter(c => c.sourceId === a.id || c.targetId === a.id);
                     const maxConf = conns.length ? Math.max(...conns.map(c => c.confidence)) : 0;
                     const color = maxConf >= 0.8 ? '#10b981' : '#3b82f6';
-                    
+
                     // 限制标题长度
                     const displayTitle = a.title.length > 50 ? a.title.substring(0, 50) + '...' : a.title;
                     // 限制内容长度
                     const displayContent = a.content.substring(0, 100) + (a.content.length > 100 ? '...' : '');
-                    
+
                     return `<div class="article-card relative" style="cursor: default;">
                         <button onclick="event.stopPropagation(); deleteArticle(${a.id})" 
                                 class="absolute top-4 right-4 text-gray-400 hover:text-red-400 transition-colors z-10"
@@ -2066,11 +2172,11 @@
                                     <span style="color: ${color};">🔗 ${conns.length}个连接</span>
                                     <span class="text-xs" style="color: var(--text-tertiary);">${Math.round(maxConf * 100)}%</span>
                                 </div>
-                                ${conns.slice(0,2).map(c => {
-                                    const targetTitle = c.sourceId === a.id ? c.targetTitle : c.sourceTitle;
-                                    const shortTitle = targetTitle.length > 30 ? targetTitle.substring(0, 30) + '...' : targetTitle;
-                                    return `<div class="text-xs truncate" style="color: var(--text-secondary);">→ ${shortTitle}</div>`;
-                                }).join('')}
+                                ${conns.slice(0, 2).map(c => {
+                        const targetTitle = c.sourceId === a.id ? c.targetTitle : c.sourceTitle;
+                        const shortTitle = targetTitle.length > 30 ? targetTitle.substring(0, 30) + '...' : targetTitle;
+                        return `<div class="text-xs truncate" style="color: var(--text-secondary);">→ ${shortTitle}</div>`;
+                    }).join('')}
                                 ${conns.length > 2 ? `<div class="text-xs mt-1" style="color: var(--text-tertiary);">还有${conns.length - 2}个连接...</div>` : ''}
                             </div>` : ''}
                             
@@ -2080,20 +2186,20 @@
                     </div>`;
                 }).join('') + '</div>';
         }
-        
-        window.deleteArticle = function(id) {
+
+        window.deleteArticle = function (id) {
             if (!confirm('确定要删除这篇文章吗？')) return;
-            
+
             articles = articles.filter(a => a.id !== id);
             connections = connections.filter(c => c.sourceId !== id && c.targetId !== id);
             displayArticles();
             showToast('✅ 文章已删除', 'success');
         };
-        
-        window.viewArticle = function(id) {
+
+        window.viewArticle = function (id) {
             const a = articles.find(x => x.id === id);
             if (!a) return;
-            
+
             // 格式化内容 - 智能分段
             let formatted = a.content;
             if (formatted.includes('\n')) {
@@ -2109,7 +2215,7 @@
             } else {
                 formatted = `<p style="margin-bottom: 1.2em;">${formatted}</p>`;
             }
-            
+
             const m = document.createElement('div');
             m.className = 'modal active';
             m.onclick = e => { if (e.target === m) m.remove(); };
@@ -2127,8 +2233,8 @@
             </div>`;
             document.body.appendChild(m);
         };
-        
-        window.findConnections = function() {
+
+        window.findConnections = function () {
             if (articles.length < 2) { alert('至少需要2篇文章'); return; }
             const r = document.getElementById('connectionsResult');
             const c = document.getElementById('connectionsContainer');
@@ -2152,12 +2258,12 @@
                 }).join('') + '</div>';
             r.scrollIntoView({ behavior: 'smooth' });
         };
-        
+
         // 导出菜单控制
-        window.toggleExportMenu = function() {
+        window.toggleExportMenu = function () {
             const menu = document.getElementById('exportMenu');
             menu.classList.toggle('hidden');
-            
+
             if (!menu.classList.contains('hidden')) {
                 document.addEventListener('click', function closeMenu(e) {
                     if (!e.target.closest('#exportBtn') && !e.target.closest('#exportMenu')) {
@@ -2167,11 +2273,11 @@
                 });
             }
         };
-        
+
         // 导出为JSON
-        window.exportAsJSON = function() {
+        window.exportAsJSON = function () {
             if (!articles.length) { showToast('没有可导出的数据', 'error'); return; }
-            const blob = new Blob([JSON.stringify({articles, connections}, null, 2)], {type: 'application/json'});
+            const blob = new Blob([JSON.stringify({ articles, connections }, null, 2)], { type: 'application/json' });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
             a.download = `灵汇 (InspLink)_${new Date().toISOString().split('T')[0]}.json`;
@@ -2180,16 +2286,16 @@
             showToast('✅ JSON导出成功！', 'success');
             document.getElementById('exportMenu').classList.add('hidden');
         };
-        
+
         // 导出为Markdown ZIP
-        window.exportAsMarkdown = function() {
+        window.exportAsMarkdown = function () {
             if (!articles.length) { showToast('没有可导出的数据', 'error'); return; }
             if (typeof JSZip === 'undefined') { showToast('正在加载导出工具...', 'info'); setTimeout(exportAsMarkdown, 1000); return; }
-            
+
             showToast('⏳ 正在生成Markdown文件...', 'info');
-            
+
             const zip = new JSZip();
-            
+
             // 创建README
             let readme = '# 灵汇 (InspLink)知识库导出\n\n';
             readme += `导出时间：${new Date().toLocaleString('zh-CN')}\n`;
@@ -2200,7 +2306,7 @@
                 readme += `${i + 1}. [${a.title}](${filename})\n`;
             });
             zip.file('README.md', readme);
-            
+
             // 创建文章文件
             articles.forEach((a, i) => {
                 const filename = `${String(i + 1).padStart(3, '0')}_${a.title.substring(0, 30).replace(/[/\\:*?"<>|]/g, '')}.md`;
@@ -2215,8 +2321,8 @@
                 md += `*导出时间：${new Date().toLocaleString('zh-CN')}*\n`;
                 zip.file(filename, md);
             });
-            
-            zip.generateAsync({type: 'blob'}).then(blob => {
+
+            zip.generateAsync({ type: 'blob' }).then(blob => {
                 const a = document.createElement('a');
                 a.href = URL.createObjectURL(blob);
                 a.download = `灵汇 (InspLink)知识库_${new Date().toISOString().split('T')[0]}.zip`;
@@ -2224,17 +2330,17 @@
                 URL.revokeObjectURL(a.href);
                 showToast('✅ Markdown ZIP导出成功！', 'success');
             });
-            
+
             document.getElementById('exportMenu').classList.add('hidden');
         };
-        
+
         // 导出为CSV
-        window.exportAsCSV = function() {
+        window.exportAsCSV = function () {
             if (!articles.length) { showToast('没有可导出的数据', 'error'); return; }
-            
+
             let csv = '\uFEFF'; // UTF-8 BOM for Excel
             csv += '标题,作者,日期,内容\n';
-            
+
             articles.forEach(a => {
                 const title = `"${a.title.replace(/"/g, '""')}"`;
                 const author = `"${a.author.replace(/"/g, '""')}"`;
@@ -2242,8 +2348,8 @@
                 const content = `"${a.content.replace(/"/g, '""').replace(/\n/g, ' ')}"`;
                 csv += `${title},${author},${date},${content}\n`;
             });
-            
-            const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
             a.download = `灵汇 (InspLink)知识库_${new Date().toISOString().split('T')[0]}.csv`;
@@ -2252,11 +2358,11 @@
             showToast('✅ CSV导出成功！', 'success');
             document.getElementById('exportMenu').classList.add('hidden');
         };
-        
+
         // 导出为HTML
-        window.exportAsHTML = function() {
+        window.exportAsHTML = function () {
             if (!articles.length) { showToast('没有可导出的数据', 'error'); return; }
-            
+
             let html = `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -2299,8 +2405,8 @@
     </div>
 </body>
 </html>`;
-            
-            const blob = new Blob([html], {type: 'text/html;charset=utf-8;'});
+
+            const blob = new Blob([html], { type: 'text/html;charset=utf-8;' });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
             a.download = `灵汇 (InspLink)知识库_${new Date().toISOString().split('T')[0]}.html`;
@@ -2309,60 +2415,60 @@
             showToast('✅ HTML导出成功！', 'success');
             document.getElementById('exportMenu').classList.add('hidden');
         };
-        
+
         // 导入功能
-        setTimeout(function() {
+        setTimeout(function () {
             const inp = document.getElementById('fileInput');
             if (inp) {
-                inp.onchange = function(e) {
+                inp.onchange = function (e) {
                     if (!e.target.files.length) return;
-                    
+
                     const total = e.target.files.length;
                     let processed = 0;
                     let imported = 0;
-                    
+
                     showToast(`⏳ 正在导入 ${total} 个文件...`, 'info');
-                    
-                    Array.from(e.target.files).forEach(function(f) {
+
+                    Array.from(e.target.files).forEach(function (f) {
                         const r = new FileReader();
-                        r.onload = function(ev) {
+                        r.onload = function (ev) {
                             try {
                                 const txt = ev.target.result;
                                 if (f.name.endsWith('.json')) {
                                     const d = JSON.parse(txt);
-                                    (d.articles || [d]).forEach(function(a) {
+                                    (d.articles || [d]).forEach(function (a) {
                                         articles.push({
-                                            id: Date.now() + Math.random(), 
-                                            title: a.title || f.name, 
-                                            content: a.content || txt, 
-                                            author: a.author || '导入', 
+                                            id: Date.now() + Math.random(),
+                                            title: a.title || f.name,
+                                            content: a.content || txt,
+                                            author: a.author || '导入',
                                             timestamp: Date.now()
                                         });
                                         imported++;
                                     });
                                 } else {
                                     articles.push({
-                                        id: Date.now() + Math.random(), 
-                                        title: f.name.replace(/\.(md|markdown|txt)$/, ''), 
-                                        content: txt, 
-                                        author: '导入', 
+                                        id: Date.now() + Math.random(),
+                                        title: f.name.replace(/\.(md|markdown|txt)$/, ''),
+                                        content: txt,
+                                        author: '导入',
                                         timestamp: Date.now()
                                     });
                                     imported++;
                                 }
-                                
+
                                 processed++;
-                                
+
                                 if (processed === total) {
                                     connections = [];
                                     for (let i = 0; i < articles.length; i++) {
                                         for (let j = i + 1; j < articles.length; j++) {
                                             connections.push({
-                                                sourceId: articles[i].id, 
-                                                targetId: articles[j].id, 
-                                                sourceTitle: articles[i].title, 
-                                                targetTitle: articles[j].title, 
-                                                confidence: 0.75 + Math.random() * 0.2, 
+                                                sourceId: articles[i].id,
+                                                targetId: articles[j].id,
+                                                sourceTitle: articles[i].title,
+                                                targetTitle: articles[j].title,
+                                                confidence: 0.75 + Math.random() * 0.2,
                                                 commonConcepts: ['知识', '连接', '思考']
                                             });
                                         }
@@ -2370,7 +2476,7 @@
                                     displayArticles();
                                     showToast(`✅ 成功导入 ${imported} 篇文章！`, 'success');
                                 }
-                            } catch (err) { 
+                            } catch (err) {
                                 processed++;
                                 if (processed === total) {
                                     showToast('❌ 部分文件导入失败', 'error');
@@ -2385,4 +2491,5 @@
         }, 500);
     </script>
 </body>
+
 </html>
