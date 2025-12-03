@@ -1990,23 +1990,22 @@
                     localStorage.setItem('lingshu_token', result.access_token);
                     localStorage.setItem('lingshu_user', JSON.stringify(result.user));
                     console.log('Token saved to localStorage');
-                }
 
-                // 显示成功动画
-                successDiv.innerHTML = `
+                    // 显示成功动画
+                    successDiv.innerHTML = `
                         <div class="text-center">
                             <div class="text-4xl mb-2">🎉</div>
                             <p class="font-semibold mb-1">注册成功！</p>
                             <p class="text-sm">正在为你准备下一步...</p>
                         </div>
                     `;
-                successDiv.style.display = 'block';
+                    successDiv.style.display = 'block';
 
-                // 显示下载选项
-                setTimeout(() => {
-                    showDownloadOptions();
-                }, 1500);
-            } else {
+                    // 显示下载选项
+                    setTimeout(() => {
+                        showDownloadOptions();
+                    }, 1500);
+                } else {
                 // 注册失败
                 console.error('Registration failed:', result);
                 errorDiv.textContent = result.error_description || result.msg || '注册失败，请重试';
