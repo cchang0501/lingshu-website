@@ -1335,7 +1335,7 @@
 
         // 保留demo数据API（如果需要）
         // Supabase配置
-        
+
         // 保留demo数据API（如果需要）
         const API_BASE_URL = 'https://lingshu-api.cchang0727.workers.dev';
         let demoData = null;
@@ -1902,7 +1902,7 @@
             content.innerHTML = `
                 <div class="text-center">
                     <div class="text-5xl mb-4">🎉</div>
-                    <h3 class="text-2xl font-bold mb-2" style="color: var(--text-primary);">欢迎加入灵汇 (InspLink)！</h3>
+                    <h3 class="text-2xl font-bold mb-2" style="color: var(--text-primary);">欢迎加入灵枢！</h3>
                     <p class="mb-8" style="color: var(--text-secondary);">选择你的平台，开始知识连接之旅</p>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -2006,21 +2006,21 @@
                         showDownloadOptions();
                     }, 1500);
                 } else {
-                // 注册失败
-                console.error('Registration failed:', result);
-                errorDiv.textContent = result.error_description || result.msg || '注册失败，请重试';
+                    // 注册失败
+                    console.error('Registration failed:', result);
+                    errorDiv.textContent = result.error_description || result.msg || '注册失败，请重试';
+                    errorDiv.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('注册错误:', error);
+                errorDiv.textContent = '网络错误，请检查连接后重试';
                 errorDiv.style.display = 'block';
+            } finally {
+                // 恢复按钮状态
+                if (btnText) btnText.style.display = 'inline';
+                if (btnLoading) btnLoading.style.display = 'none';
+                if (btn) btn.disabled = false;
             }
-        } catch (error) {
-            console.error('注册错误:', error);
-            errorDiv.textContent = '网络错误，请检查连接后重试';
-            errorDiv.style.display = 'block';
-        } finally {
-            // 恢复按钮状态
-            if (btnText) btnText.style.display = 'inline';
-            if (btnLoading) btnLoading.style.display = 'none';
-            if (btn) btn.disabled = false;
-        }
         }
 
         // 首次访问完整引导
