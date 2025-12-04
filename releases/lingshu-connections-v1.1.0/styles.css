@@ -1,0 +1,247 @@
+.lingshu-connections-view {
+    padding: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.lingshu-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-muted);
+}
+
+.lingshu-hint {
+    font-size: 0.85em;
+    margin-top: 8px;
+}
+
+.lingshu-stats {
+    padding: 10px 12px;
+    background: var(--background-secondary);
+    border-bottom: 1px solid var(--background-modifier-border);
+    font-size: 0.85em;
+    color: var(--text-muted);
+}
+
+.lingshu-connections-list {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.lingshu-connection-item {
+    position: relative;
+    padding: 6px 8px 6px 20px;
+    border-bottom: 1px solid var(--background-modifier-border);
+    transition: background 0.1s;
+}
+
+.lingshu-connection-item:hover {
+    background: var(--background-modifier-hover);
+}
+
+.lingshu-connection-item.expanded {
+    background: var(--background-secondary);
+}
+
+.lingshu-arrow {
+    position: absolute;
+    left: 6px;
+    top: 8px;
+    color: var(--text-muted);
+    font-size: 11px;
+    transition: transform 0.15s;
+    user-select: none;
+    cursor: pointer;
+}
+
+.lingshu-arrow:hover {
+    color: var(--text-normal);
+}
+
+.lingshu-main-row {
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+}
+
+.lingshu-similarity-badge {
+    flex-shrink: 0;
+    min-width: 36px;
+    padding: 1px 4px;
+    background: var(--interactive-accent);
+    color: white;
+    border-radius: 3px;
+    font-weight: 600;
+    font-size: 0.75em;
+    text-align: center;
+    cursor: pointer;
+}
+
+.lingshu-similarity-badge:hover {
+    opacity: 0.85;
+}
+
+.lingshu-content-area {
+    flex: 1;
+    min-width: 0;
+    line-height: 1.5;
+}
+
+.lingshu-title {
+    font-size: 0.9em;
+    font-weight: 500;
+    color: var(--text-normal);
+    text-decoration: none;
+}
+
+.lingshu-title:hover {
+    color: var(--interactive-accent);
+}
+
+.lingshu-type-tag {
+    display: inline-block;
+    padding: 0px 4px;
+    margin-left: 4px;
+    background: var(--background-modifier-border);
+    color: var(--text-muted);
+    border-radius: 2px;
+    font-size: 0.65em;
+    font-weight: 500;
+}
+
+.lingshu-explanation {
+    display: none;
+}
+
+.lingshu-preview {
+    margin-top: 6px;
+    padding: 8px;
+    background: var(--background-primary-alt);
+    border-left: 2px solid var(--interactive-accent);
+}
+
+.lingshu-preview-loading {
+    color: var(--text-muted);
+    font-size: 0.85em;
+    padding: 4px;
+}
+
+.lingshu-preview-content {
+    max-height: 250px;
+    overflow-y: auto;
+    padding: 6px;
+    font-size: 0.85em;
+    line-height: 1.5;
+}
+
+.lingshu-preview-content h1 {
+    font-size: 1.1em;
+    margin: 6px 0;
+    font-weight: 600;
+}
+
+.lingshu-preview-content h2 {
+    font-size: 1em;
+    margin: 4px 0;
+    font-weight: 600;
+}
+
+.lingshu-preview-content h3 {
+    font-size: 0.95em;
+    margin: 3px 0;
+    font-weight: 600;
+}
+
+.lingshu-preview-content p {
+    margin: 3px 0;
+    color: var(--text-normal);
+}
+
+.lingshu-preview-content li {
+    color: var(--text-normal);
+    list-style: disc;
+    margin-left: 16px;
+}
+
+.lingshu-view-full-button {
+    margin-top: 6px;
+    padding: 4px 10px;
+    background: var(--interactive-accent);
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 0.8em;
+    transition: opacity 0.2s;
+}
+
+.lingshu-view-full-button:hover {
+    opacity: 0.85;
+}
+
+/* 错误提示样式 */
+.lingshu-error {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.lingshu-error-message {
+    color: var(--text-error);
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+/* 加载状态样式 */
+.lingshu-loading {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.lingshu-loading-message {
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+/* 平滑更新动画 */
+.lingshu-updating {
+    opacity: 0.6;
+    transition: opacity 0.15s ease-in-out;
+}
+
+.lingshu-connection-item {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 本地预测标签样式 */
+.lingshu-type-tag.local {
+    background: #ffa500;
+    color: white;
+}
+
+/* 云端结果标签样式 */
+.lingshu-type-tag.cloud {
+    background: #4a9eff;
+    color: white;
+}
+
+/* 本地预测连接项（稍微透明） */
+.lingshu-connection-item.local-prediction {
+    opacity: 0.85;
+}
+
+/* 云端结果连接项（完全不透明） */
+.lingshu-connection-item.cloud-result {
+    opacity: 1;
+}

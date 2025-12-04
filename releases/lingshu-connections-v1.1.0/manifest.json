@@ -1,0 +1,10 @@
+{
+  "id": "lingshu-connections",
+  "name": "灵枢连接",
+  "version": "1.0.0",
+  "minAppVersion": "0.15.0",
+  "description": "AI 驱动的笔记连接发现工具，自动发现笔记之间的深层关联",
+  "author": "Lingshu Team",
+  "authorUrl": "https://lingshu-app.pages.dev",
+  "isDesktopOnly": false
+}
